@@ -158,11 +158,11 @@ def _call_ai(prompt: str, provider: str = None, api_key: str = None) -> str:
         raise ValueError(f"Unknown AI_PROVIDER: '{provider}'. Must be anthropic, openai, or ollama.")
 
 
-def analyze_requirement(requirement: Dict, context: str, api_key: str = None) -> Dict:
+def analyze_requirement(requirement: Dict, context: str, provider: str = None, api_key: str = None) -> Dict:
     prompt = _build_prompt(requirement, context)
 
     try:
-        result_text = _call_ai(prompt)
+        result_text = _call_ai(prompt, provider, api_key)
         if result_text.startswith("```"):
             lines = result_text.split("\n")
             inner = lines[1:]
@@ -252,6 +252,8 @@ def analyze_all_requirements(
     requirements: List[Dict],
     context: str,
     session_id: str = None,
+    provider: str = None,
+    api_key: str = None,
 ) -> Dict:
     if not session_id:
         session_id = str(uuid.uuid4())[:8]
@@ -260,7 +262,7 @@ def analyze_all_requirements(
 
     with ThreadPoolExecutor(max_workers=min(10, len(requirements))) as executor:
         future_to_index = {
-            executor.submit(analyze_requirement, req, context): i
+            executor.submit(analyze_requirement, req, context, provider, api_key): i
             for i, req in enumerate(requirements)
         }
         for future in as_completed(future_to_index):

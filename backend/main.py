@@ -138,10 +138,8 @@ async def upload_files(
     if not api_key:
         raise HTTPException(status_code=400, detail=f"No API key provided for provider '{provider}'.")
 
-    # Inject into env so ai_analyzer picks them up (thread-safe for single worker)
-    os.environ['AI_PROVIDER']     = provider
-    os.environ['ANTHROPIC_API_KEY'] = api_key if provider == 'anthropic' else os.getenv('ANTHROPIC_API_KEY', '')
-    os.environ['OPENAI_API_KEY']    = api_key if provider == 'openai'    else os.getenv('OPENAI_API_KEY', '')
+    # Key and provider stay request-scoped (passed straight to the analyzer) so
+    # concurrent users on the public URL never clobber each other's credentials.
 
     session_id = str(uuid.uuid4())[:8]
 
@@ -168,6 +166,8 @@ async def upload_files(
             requirements,
             context_text,
             session_id=session_id,
+            provider=provider,
+            api_key=api_key,
         )
 
         save_analysis(session_id, analysis)
