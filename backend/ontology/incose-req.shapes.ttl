@@ -1,0 +1,232 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix incose-req: <http://sie.arizona.edu/ontology/incose-req#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# =============================================================================
+# INCOSE-REQ SHACL Shapes
+# Constraint shapes ensuring well-formed ontology instances.
+# Version: 0.1.0
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Rule Shape
+# -----------------------------------------------------------------------------
+
+incose-req:RuleShape a sh:NodeShape ;
+    sh:targetClass incose-req:Rule ;
+    rdfs:label "Rule Shape" ;
+    rdfs:comment "Validates that Rule instances are well-formed." ;
+
+    sh:property [
+        sh:path incose-req:hasRuleId ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^R[0-9]{1,2}$" ;
+        sh:name "rule ID" ;
+        sh:message "Rule must have exactly one ID matching pattern R1-R42."
+    ] ;
+
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:name "rule label" ;
+        sh:message "Rule must have at least one label."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:belongsToCategory ;
+        sh:class incose-req:RuleCategory ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "rule category" ;
+        sh:message "Rule must belong to exactly one category."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:hasApplicability ;
+        sh:class incose-req:RuleApplicability ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "rule applicability" ;
+        sh:message "Rule must have exactly one applicability level."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:testsCharacteristic ;
+        sh:class incose-req:QualityCharacteristic ;
+        sh:minCount 1 ;
+        sh:name "tests characteristic" ;
+        sh:message "Rule must test at least one quality characteristic."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:requiresProjectDictionary ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "requires project dictionary" ;
+        sh:message "Rule must specify whether it requires a project dictionary."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Quality Characteristic Shape
+# -----------------------------------------------------------------------------
+
+incose-req:QualityCharacteristicShape a sh:NodeShape ;
+    sh:targetClass incose-req:QualityCharacteristic ;
+    rdfs:label "Quality Characteristic Shape" ;
+
+    sh:property [
+        sh:path incose-req:hasCharacteristicId ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^C[0-9]{1,2}$" ;
+        sh:name "characteristic ID" ;
+        sh:message "Characteristic must have exactly one ID matching pattern C1-C15."
+    ] ;
+
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:name "characteristic label" ;
+        sh:message "Characteristic must have at least one label."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Violation Shape
+# -----------------------------------------------------------------------------
+
+incose-req:ViolationShape a sh:NodeShape ;
+    sh:targetClass incose-req:Violation ;
+    rdfs:label "Violation Shape" ;
+
+    sh:property [
+        sh:path incose-req:violatesRule ;
+        sh:class incose-req:Rule ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "violated rule" ;
+        sh:message "Violation must reference exactly one rule."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:inheresInRequirement ;
+        sh:class incose-req:Requirement ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "bearer requirement" ;
+        sh:message "Violation must inhere in exactly one requirement."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:hasSeverityRating ;
+        sh:class incose-req:SeverityRating ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "severity rating" ;
+        sh:message "Violation must have exactly one severity rating."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Assessment Shape
+# -----------------------------------------------------------------------------
+
+incose-req:AssessmentShape a sh:NodeShape ;
+    sh:targetClass incose-req:Assessment ;
+    rdfs:label "Assessment Shape" ;
+
+    sh:property [
+        sh:path incose-req:assessesSet ;
+        sh:class incose-req:RequirementSet ;
+        sh:minCount 1 ;
+        sh:name "assessed set" ;
+        sh:message "Assessment must assess at least one requirement set."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:hasResult ;
+        sh:class incose-req:AssessmentResult ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "assessment result" ;
+        sh:message "Assessment must produce exactly one result."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Assessment Result Shape
+# -----------------------------------------------------------------------------
+
+incose-req:AssessmentResultShape a sh:NodeShape ;
+    sh:targetClass incose-req:AssessmentResult ;
+    rdfs:label "Assessment Result Shape" ;
+
+    sh:property [
+        sh:path incose-req:includesViolation ;
+        sh:class incose-req:Violation ;
+        sh:name "included violations" ;
+        sh:message "Assessment result violations must be Violation instances."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Severity Rating Shape
+# -----------------------------------------------------------------------------
+
+incose-req:SeverityRatingShape a sh:NodeShape ;
+    sh:targetClass incose-req:SeverityRating ;
+    rdfs:label "Severity Rating Shape" ;
+
+    sh:property [
+        sh:path incose-req:hasOrdinalRank ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:name "ordinal rank" ;
+        sh:message "Severity rating must have exactly one positive integer rank."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Requirement Shape
+# -----------------------------------------------------------------------------
+
+incose-req:RequirementShape a sh:NodeShape ;
+    sh:targetClass incose-req:Requirement ;
+    rdfs:label "Requirement Shape" ;
+
+    sh:property [
+        sh:path incose-req:hasRequirementId ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "requirement ID" ;
+        sh:message "Requirement must have exactly one identifier."
+    ] ;
+
+    sh:property [
+        sh:path incose-req:hasStatementText ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:name "statement text" ;
+        sh:message "Requirement must have statement text."
+    ] .
+
+# -----------------------------------------------------------------------------
+# Rule Category Shape
+# -----------------------------------------------------------------------------
+
+incose-req:RuleCategoryShape a sh:NodeShape ;
+    sh:targetClass incose-req:RuleCategory ;
+    rdfs:label "Rule Category Shape" ;
+
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:name "category label" ;
+        sh:message "Category must have at least one label."
+    ] .

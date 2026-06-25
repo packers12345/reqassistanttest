@@ -1,0 +1,382 @@
+@prefix incose-req: <http://sie.arizona.edu/ontology/incose-req#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+
+# =============================================================================
+# INCOSE-REQ: INCOSE Requirements Quality Ontology
+# Part of the GI-JOE Ontology Family (WRT-2516)
+#
+# BFO 2020-aligned formalization of the INCOSE Guide to Writing Requirements
+# (INCOSE-TP-2010-006-04, Version/Revision 4, 1 July 2023).
+#
+# Provides a machine-readable, extensible knowledge base for requirements
+# quality assessment. Replaces the flat JSON rule set in the
+# Requirements-Assistant tool with a formal taxonomy of rules, categories,
+# and quality characteristics queryable via SPARQL.
+#
+# Architecture: BFO 2020 (ISO 21838-2) -> incose-req
+#               ABox (rule instances) in incose-req-rules.ttl
+#               SHACL shapes in incose-req.shapes.ttl
+#
+# Sources:
+#   INCOSE Guide to Writing Requirements, V4, 1 Jul 2023
+#     (INCOSE-TP-2010-006-04, ISBN 978-1-93707-05-4)
+#   Ryan, M. & Wheatcraft, L. (principal authors)
+#
+# Version: 0.1.0 (TBox — classes, properties, axioms)
+# =============================================================================
+#
+# DESIGN DECISIONS:
+#
+# DD-01: What IS a Requirement?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: A requirement is an information content entity — a textual
+#   statement that can be copied, transmitted, and instantiated in documents,
+#   databases, or models. It generically depends on being carried by some
+#   information bearer. Consistent with BFO treatment of specifications.
+#   CCO breadcrumb: likely cco:InformationContentEntity or
+#   cco:DirectiveInformationContentEntity; CCO alignment deferred.
+#
+# DD-02: What IS a Requirement Set?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: A requirement set is a collection of requirements organized
+#   as an information artifact (a specification document, a DOORS module,
+#   a database view). It is not a mere aggregate — it has identity,
+#   completeness criteria, and organizational structure.
+#   CCO breadcrumb: likely cco:InformationBearingArtifact; deferred.
+#
+# DD-03: What IS a Quality Characteristic?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: A quality characteristic (e.g., "Unambiguous") is a published
+#   definition of a desirable property. It is an information entity defined
+#   by the INCOSE Guide, not a quality inhering in a specific requirement.
+#   The *assessment* of whether a requirement possesses this characteristic
+#   is a process; the characteristic definition itself is a GDC.
+#
+# DD-04: What IS a Rule?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: A rule is a published assessment criterion with definition,
+#   elaboration, examples, and exceptions. It is prescriptive information
+#   that generically depends on its bearers (the INCOSE Guide, tool
+#   configurations, organizational standards).
+#
+# DD-05: What IS a Rule Category?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: A category (e.g., "Accuracy", "Singularity") is a named
+#   classification grouping defined by the INCOSE Guide. It is an
+#   information entity, not an inherent property.
+#
+# DD-06: What IS a Violation?
+#   Answer: bfo:SpecificallyDependentContinuant (SDC).
+#   Rationale: A violation inheres in a specific requirement instance.
+#   It cannot exist without its bearer (the requirement it was found in).
+#   A violation is a finding — a specifically dependent quality of the
+#   assessed requirement relative to a rule.
+#
+# DD-07: What IS an Assessment?
+#   Answer: bfo:Process.
+#   Rationale: An assessment is a temporal act of evaluating a requirement
+#   or requirement set against rules. It has a beginning, duration, and
+#   end. It is performed by an agent (human or AI).
+#
+# DD-08: What IS an Assessment Result?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: An assessment result is an information artifact produced by
+#   an assessment process. It contains the violations found, their
+#   severities, and aggregate quality metrics. It can be stored,
+#   transmitted, and compared across assessment runs.
+#
+# DD-09: What IS a Severity Rating?
+#   Answer: bfo:GenericallyDependentContinuant (GDC).
+#   Rationale: A severity rating (Low/Medium/High/Critical) is an
+#   information content entity — a position on an ordinal scale. It is
+#   NOT a bfo:Quality because BFO Qualities inhere in Independent
+#   Continuants, and Violations are SDCs. Treating severity as a GDC
+#   allows future extension to multiple severity scales (NNSA, MIL-STD),
+#   cross-scale alignment, and measurement-theoretic formalization per
+#   WRT-2516 Ch. 10.
+#   CCO breadcrumb: likely cco:OrdinalMeasurementInformationContentEntity;
+#   deferred.
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Ontology Declaration
+# -----------------------------------------------------------------------------
+
+<http://sie.arizona.edu/ontology/incose-req> a owl:Ontology ;
+    dc:title "INCOSE Requirements Quality Ontology" ;
+    dc:creator "P. Wach, University of Arizona" ;
+    dc:description "BFO 2020-aligned formalization of the INCOSE Guide to Writing Requirements (V4, 2023). Part of the GI-JOE ontology family for WRT-2516." ;
+    dc:date "2026-03-26" ;
+    dcterms:license "For research use within WRT-2516 (SERC/NNSA)" ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:comment "TBox only. ABox (rule instances) in incose-req-rules.ttl." ;
+    owl:imports <http://purl.obolibrary.org/obo/bfo/2020/bfo.owl> .
+
+# =============================================================================
+# CLASS HIERARCHY
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Requirement (GDC)
+# -----------------------------------------------------------------------------
+
+incose-req:Requirement a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Requirement" ;
+    rdfs:comment "An individual need or requirement statement as defined by the INCOSE Guide. A textual information entity that specifies a capability, characteristic, constraint, or quality factor that a system must possess." .
+
+# -----------------------------------------------------------------------------
+# Requirement Set (GDC)
+# -----------------------------------------------------------------------------
+
+incose-req:RequirementSet a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Requirement Set" ;
+    rdfs:comment "A structured collection of individual needs and/or requirement statements organized as an information artifact (e.g., a specification document, a DOORS module). Has its own quality characteristics distinct from those of individual requirements." .
+
+# -----------------------------------------------------------------------------
+# Quality Characteristic (GDC) — with individual/set distinction
+# -----------------------------------------------------------------------------
+
+incose-req:QualityCharacteristic a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Quality Characteristic" ;
+    rdfs:comment "A published definition of a desirable property of a requirement or requirement set, as defined by the INCOSE Guide Sections 2-3. Each characteristic has a name, definition, rationale, and guidance." .
+
+incose-req:IndividualQualityCharacteristic a owl:Class ;
+    rdfs:subClassOf incose-req:QualityCharacteristic ;
+    rdfs:label "Individual Quality Characteristic" ;
+    rdfs:comment "A quality characteristic that applies to individual need and requirement statements (INCOSE Guide Section 2, C1-C9)." .
+
+incose-req:SetQualityCharacteristic a owl:Class ;
+    rdfs:subClassOf incose-req:QualityCharacteristic ;
+    rdfs:label "Set Quality Characteristic" ;
+    rdfs:comment "A quality characteristic that applies to sets of needs and requirements (INCOSE Guide Section 3, C10-C15)." .
+
+# -----------------------------------------------------------------------------
+# Rule (GDC)
+# -----------------------------------------------------------------------------
+
+incose-req:Rule a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Rule" ;
+    rdfs:comment "A published assessment criterion from the INCOSE Guide Section 4, with definition, elaboration, examples, exceptions, and links to characteristics it helps establish. 42 rules in V4." .
+
+# -----------------------------------------------------------------------------
+# Rule Category (GDC)
+# -----------------------------------------------------------------------------
+
+incose-req:RuleCategory a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Rule Category" ;
+    rdfs:comment "A named classification grouping of related rules as defined by the INCOSE Guide Section 4 (e.g., Accuracy, Singularity, Completeness). 14 categories in V4." .
+
+# -----------------------------------------------------------------------------
+# Violation (SDC)
+# -----------------------------------------------------------------------------
+
+incose-req:Violation a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000020 ;  # SpecificallyDependentContinuant
+    rdfs:label "Violation" ;
+    rdfs:comment "A finding that a specific requirement fails to satisfy a specific rule. Inheres in the requirement instance; cannot exist without its bearer." .
+
+# -----------------------------------------------------------------------------
+# Assessment (Process)
+# -----------------------------------------------------------------------------
+
+incose-req:Assessment a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000015 ;  # Process
+    rdfs:label "Assessment" ;
+    rdfs:comment "A temporal act of evaluating a requirement or requirement set against rules. Performed by an agent (human reviewer, AI tool, or multi-agent system). Produces an AssessmentResult." .
+
+# -----------------------------------------------------------------------------
+# Assessment Result (GDC)
+# -----------------------------------------------------------------------------
+
+incose-req:AssessmentResult a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Assessment Result" ;
+    rdfs:comment "An information artifact produced by an Assessment process. Contains the set of violations found, their severities, and aggregate quality metrics. Enables comparison across assessment runs." .
+
+# -----------------------------------------------------------------------------
+# Severity Rating (GDC)
+# -----------------------------------------------------------------------------
+
+incose-req:SeverityRating a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Severity Rating" ;
+    rdfs:comment "An ordinal position on a severity scale, representing the impact of a violation. The default INCOSE scale has four levels: Low, Medium, High, Critical. Future domain-specific scales (NNSA, MIL-STD) can define additional SeverityRating individuals." ;
+    # CCO breadcrumb: likely cco:OrdinalMeasurementInformationContentEntity
+    .
+
+# -----------------------------------------------------------------------------
+# Rule Applicability (GDC) — whether a rule applies to needs, requirements, or both
+# -----------------------------------------------------------------------------
+
+incose-req:RuleApplicability a owl:Class ;
+    rdfs:subClassOf obo:BFO_0000031 ;  # GenericallyDependentContinuant
+    rdfs:label "Rule Applicability" ;
+    rdfs:comment "The level of applicability of a rule to needs and/or requirements. Three levels defined in INCOSE Guide Appendix D: CNCR (Compulsory for Needs and Requirements), RNCR (Recommended for Needs, Compulsory for Requirements), CR (Compulsory for Requirements only)." .
+
+# =============================================================================
+# OBJECT PROPERTIES
+# =============================================================================
+
+# --- Rule → Characteristic ---
+incose-req:testsCharacteristic a owl:ObjectProperty ;
+    rdfs:domain incose-req:Rule ;
+    rdfs:range incose-req:QualityCharacteristic ;
+    rdfs:label "tests characteristic" ;
+    rdfs:comment "Links a rule to the quality characteristic(s) it helps establish. Derived from INCOSE Guide V4 Appendix E cross-reference matrix." .
+
+# --- Rule → Category ---
+incose-req:belongsToCategory a owl:ObjectProperty ;
+    rdfs:domain incose-req:Rule ;
+    rdfs:range incose-req:RuleCategory ;
+    rdfs:label "belongs to category" ;
+    rdfs:comment "Links a rule to its parent category (e.g., R1 belongs to Accuracy)." ;
+    a owl:FunctionalProperty .
+
+# --- Rule → Applicability ---
+incose-req:hasApplicability a owl:ObjectProperty ;
+    rdfs:domain incose-req:Rule ;
+    rdfs:range incose-req:RuleApplicability ;
+    rdfs:label "has applicability" ;
+    rdfs:comment "Links a rule to its applicability level (CNCR, RNCR, or CR)." ;
+    a owl:FunctionalProperty .
+
+# --- Violation → Rule ---
+incose-req:violatesRule a owl:ObjectProperty ;
+    rdfs:domain incose-req:Violation ;
+    rdfs:range incose-req:Rule ;
+    rdfs:label "violates rule" ;
+    rdfs:comment "Links a violation to the rule that was violated." ;
+    a owl:FunctionalProperty .
+
+# --- Violation → Requirement (BFO inheres_in) ---
+incose-req:inheresInRequirement a owl:ObjectProperty ;
+    rdfs:subPropertyOf obo:RO_0000052 ;  # inheres_in
+    rdfs:domain incose-req:Violation ;
+    rdfs:range incose-req:Requirement ;
+    rdfs:label "inheres in requirement" ;
+    rdfs:comment "Links a violation to the specific requirement it was found in. Subproperty of BFO inheres_in." ;
+    a owl:FunctionalProperty .
+
+# --- Violation → Severity Rating ---
+incose-req:hasSeverityRating a owl:ObjectProperty ;
+    rdfs:domain incose-req:Violation ;
+    rdfs:range incose-req:SeverityRating ;
+    rdfs:label "has severity rating" ;
+    rdfs:comment "Links a violation to its severity rating on the applicable scale." ;
+    a owl:FunctionalProperty .
+
+# --- Requirement → Requirement Set ---
+incose-req:memberOfSet a owl:ObjectProperty ;
+    rdfs:domain incose-req:Requirement ;
+    rdfs:range incose-req:RequirementSet ;
+    rdfs:label "member of set" ;
+    rdfs:comment "Links an individual requirement to the requirement set(s) it belongs to." .
+
+# --- Assessment → Requirement Set ---
+incose-req:assessesSet a owl:ObjectProperty ;
+    rdfs:domain incose-req:Assessment ;
+    rdfs:range incose-req:RequirementSet ;
+    rdfs:label "assesses set" ;
+    rdfs:comment "Links an assessment process to the requirement set being assessed." .
+
+# --- Assessment → Assessment Result ---
+incose-req:hasResult a owl:ObjectProperty ;
+    rdfs:domain incose-req:Assessment ;
+    rdfs:range incose-req:AssessmentResult ;
+    rdfs:label "has result" ;
+    rdfs:comment "Links an assessment process to its output result." ;
+    a owl:FunctionalProperty .
+
+# --- Assessment Result → Violation ---
+incose-req:includesViolation a owl:ObjectProperty ;
+    rdfs:domain incose-req:AssessmentResult ;
+    rdfs:range incose-req:Violation ;
+    rdfs:label "includes violation" ;
+    rdfs:comment "Links an assessment result to a violation found during the assessment." .
+
+# =============================================================================
+# DATA PROPERTIES
+# =============================================================================
+
+# --- Identifiers ---
+incose-req:hasRuleId a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Rule ;
+    rdfs:range xsd:string ;
+    rdfs:label "has rule ID" ;
+    rdfs:comment "The official INCOSE Guide rule identifier (e.g., 'R1', 'R42')." ;
+    a owl:FunctionalProperty .
+
+incose-req:hasCharacteristicId a owl:DatatypeProperty ;
+    rdfs:domain incose-req:QualityCharacteristic ;
+    rdfs:range xsd:string ;
+    rdfs:label "has characteristic ID" ;
+    rdfs:comment "The official INCOSE Guide characteristic identifier (e.g., 'C1', 'C15')." ;
+    a owl:FunctionalProperty .
+
+# --- Descriptions ---
+incose-req:hasShortDescription a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "has short description" ;
+    rdfs:comment "Brief description of a rule, characteristic, or category." .
+
+# --- Severity ordinal rank ---
+incose-req:hasOrdinalRank a owl:DatatypeProperty ;
+    rdfs:domain incose-req:SeverityRating ;
+    rdfs:range xsd:integer ;
+    rdfs:label "has ordinal rank" ;
+    rdfs:comment "Integer rank for ordering severity ratings. Lower = less severe." ;
+    a owl:FunctionalProperty .
+
+# --- Rule metadata ---
+incose-req:requiresProjectDictionary a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Rule ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "requires project dictionary" ;
+    rdfs:comment "Whether the rule requires a project data dictionary, glossary, model, or ontology to be assessed (INCOSE Guide Appendix D)." ;
+    a owl:FunctionalProperty .
+
+# --- Violation metadata ---
+incose-req:hasAffectedText a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Violation ;
+    rdfs:range xsd:string ;
+    rdfs:label "has affected text" ;
+    rdfs:comment "The specific text within the requirement that triggered the violation." .
+
+# --- Assessment metadata ---
+incose-req:hasAssessmentDate a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Assessment ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "has assessment date" ;
+    rdfs:comment "The date/time when the assessment was performed." .
+
+incose-req:hasAssessor a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Assessment ;
+    rdfs:range xsd:string ;
+    rdfs:label "has assessor" ;
+    rdfs:comment "The agent (human or AI tool identifier) that performed the assessment." .
+
+# --- Requirement metadata ---
+incose-req:hasRequirementId a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Requirement ;
+    rdfs:range xsd:string ;
+    rdfs:label "has requirement ID" ;
+    rdfs:comment "The identifier of the requirement within its source document or system." ;
+    a owl:FunctionalProperty .
+
+incose-req:hasStatementText a owl:DatatypeProperty ;
+    rdfs:domain incose-req:Requirement ;
+    rdfs:range xsd:string ;
+    rdfs:label "has statement text" ;
+    rdfs:comment "The full text of the requirement statement." .

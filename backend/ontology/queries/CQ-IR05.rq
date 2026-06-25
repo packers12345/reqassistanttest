@@ -1,0 +1,19 @@
+# CQ-IR05: What is the severity distribution of violations in an assessed
+#           requirement set?
+# Expected: Count by severity level
+# Requires ABox instance data (Assessment, Violations)
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?severityLabel ?rank (COUNT(?violation) AS ?count)
+WHERE {
+    ?assessment a incose-req:Assessment ;
+                incose-req:hasResult ?result .
+    ?result incose-req:includesViolation ?violation .
+    ?violation incose-req:hasSeverityRating ?severity .
+    ?severity rdfs:label ?severityLabel ;
+              incose-req:hasOrdinalRank ?rank .
+}
+GROUP BY ?severityLabel ?rank
+ORDER BY ?rank

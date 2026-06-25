@@ -1,0 +1,30 @@
+# CQ-IR07: What is the quality profile of a requirement set
+#           (characteristics met vs. not met)?
+# Expected: Characteristic-by-characteristic pass/fail
+# A characteristic is "not met" if any rule testing it produced a violation.
+# Requires ABox instance data
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?charId ?charLabel
+       (IF(?violationCount > 0, "FAIL", "PASS") AS ?status)
+       ?violationCount
+WHERE {
+    ?char incose-req:hasCharacteristicId ?charId ;
+          rdfs:label ?charLabel .
+    {
+        SELECT ?char (COUNT(DISTINCT ?violation) AS ?violationCount)
+        WHERE {
+            ?char incose-req:hasCharacteristicId [] .
+            OPTIONAL {
+                ?rule incose-req:testsCharacteristic ?char .
+                ?violation incose-req:violatesRule ?rule .
+                ?assessment incose-req:hasResult ?result .
+                ?result incose-req:includesViolation ?violation .
+            }
+        }
+        GROUP BY ?char
+    }
+}
+ORDER BY ?charId

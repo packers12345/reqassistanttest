@@ -1,0 +1,711 @@
+MQ-99 BERSERKER UCAV -- REQUIREMENTS EXTRACT
+Source: SFR SysML Model (.mdzip)
+System: MQ-99 Berserker Air Vehicle
+Total requirements: 233
+Extraction date: 2026-04-13
+Extracted from: IGNITE_Disruption_2026/src/data/berserker_model.json
+
+Format: [ID]  (Category)  Text
+================================================================================
+
+[1]  (Top Level Cyber User Need)
+  MQ-99 shall be able to complete assigned missions 90% of the time under cyber attack.
+
+[1.1]  (Hardened (Prevent))
+  MQ-99 shall be sufficiently hardened from cyber attack.
+
+[1.1.1]  (Flight Critical Hardware Assurance )
+  MQ-99 shall utilize Hardware Assurance techniques including secure boot, cryptographic hardware modules, and removing maintenance ports on flight critical hardware.
+
+[1.1.1.1]  (Mission Computer Secure Boot)
+  The mission computer shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.10]  (Navigation System Cryptographic Module)
+  The navigation system shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.1.11]  (Propulsion System Cryptographic Module)
+  The propulsion system shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.1.12]  (Fuel System Cryptographic Module)
+  The fuel system shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.1.13]  (Electrical System Cryptographic Module)
+  The electrical system shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.1.14]  (Communications System Cryptographic Module)
+  The communications system shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.1.15]  (Mission Computer Maintenance Ports)
+  The mission computer shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.16]  (Flight Control System Maintenance Ports)
+  The flight control system shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.17]  (Navigation System Maintenance Ports)
+  The navigation system shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.18]  (Propulsion System Maintenance Ports)
+  The propulsion system shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.19]  (Fuel System Maintenance Ports)
+  The fuel system shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.2]  (Flight Control system Secure Boot)
+  The Flight Control system shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.20]  (Electrical System Maintenance Ports)
+  The electrical system shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.21]  (Communications System Mainteanance Ports)
+  The communications system shall have all maintenance ports removed or rendered inoperable when the system is in operation.
+
+[1.1.1.3]  (Navigation System Secure Boot)
+  The navigation system shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.4]  (Propulsion System Secure Boot)
+  The propulsion system shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.5]  (Fuel System Secure Boot)
+  The fuel system shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.6]  (Electrical System Secure Boot)
+  The electrical system shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.7]  (Communications System Secure Boot)
+  The communications system shall boot securely and verify the integrity of the bootloader and firmware before allowing the system to start.
+
+[1.1.1.8]  (Mission Computer Cryptographic Module)
+  The mission computer shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.1.9]  (Flight Control System Cryptographic Module)
+  The flight control system shall utilize a dedicated hardware module for secure key storage, encryption, and authentication.
+
+[1.1.10]  (Software Scanning)
+  All MQ-99 software shall be thoroughly reviewed for potential security issues by state-of-the-art static and dynamic code checking techniques.
+
+[1.1.2]  (Hardware Bill of Materials)
+  The prime contractor shall provide a full hardware bill of materials for all logical hardware down to the chip level.
+
+[1.1.3]  (Software Bill of Materials)
+  The prime contractor shall provide a full software bill of material for all software adn firmware provided to include compilers and libraries utilized.
+
+[1.1.4]  (Removal of Software Maintenance and Developmental Tools)
+  All software developmental and maintenance tools, services, and ports not required for operation of the MQ-99 shall be removed from the system before operations.
+
+[1.1.5]  (Access Control)
+  The MQ-99 system shall only allow identified, authenticated, and authorized persons and non-person entities access or interconnection to system or sub-system elements.
+
+[1.1.5.1]  (Cyber Sentinel as 1553 Bus Controller)
+  The cyber sentinel shall serve as the 1553 bus controller and shall maintain an access control list that identifies what components are allowed to operate on the bus.
+
+[1.1.5.2]  (Ground Station Access Control)
+  Access control on the ground station shall be strictly controlled in accordance with Zero Trust principles.
+
+[1.1.5.2.1]  (Ground Station MFA)
+  The ground station shall enforce multi-factor authentication for all user access, ensuring that only authorized personnel can access system controls and data.
+
+[1.1.5.2.2]  (Ground Station Role Based Access Control)
+  The ground station shall implement role-based access control for all operations, ensuring that users are only granted permissions necessary for their role, and that high-privilege roles are strictly controlled and monitored.
+
+[1.1.5.2.3]  (Ground Station Network Segmentation)
+  The ground station shall utilize network segmentation to isolate critical subsystems from less secure areas of the network, reducing the risk of lateral movement by attackers.
+
+[1.1.5.2.4]  (Ground Station Access Logging)
+  All access to the ground station's critical systems shall be logged in a secure, tamper-proof manner, with real-time monitoring and alerting for any unauthorized access attempts.
+
+[1.1.5.3]  (Maintenance System Access Control)
+  Access control on the maintenance system shall be strictly controlled in accordance with Zero Trust principles.
+
+[1.1.5.3.1]  (Maintenance System MFA)
+  The maintenance system shall enforce multi-factor authentication for all user access, ensuring that only authorized personnel can access system controls and data.
+
+[1.1.5.3.2]  (Maintenance System Role Based Access Control)
+  The maintenance system shall implement role-based access control for all operations, ensuring that users are only granted permissions necessary for their role, and that high-privilege roles are strictly controlled and monitored.
+
+[1.1.5.3.3]  (Maintenance System Network Segmentation)
+  The maintenance system shall utilize network segmentation to isolate critical subsystems from less secure areas of the network, reducing the risk of lateral movement by attackers.
+
+[1.1.5.3.4]  (Maintenance System Access Logging)
+  All access to the maintenance system's critical components shall be logged in a secure, tamper-proof manner, with real-time monitoring and alerting for any unauthorized access attempts.
+
+[1.1.6]  (Communications Encryption)
+  All external communication to or from the MQ-99 shall use NSA Type-1 encryption.
+
+[1.1.7]  (Data at Rest Encryption)
+  All data at rest on all MQ-99 systems and sub-systems shall be encrypted at rest.
+
+[1.1.8]  (Digital Signatures on OFPs)
+  All Operational Flight Programs (OFPs) for MQ-99 systems and components shall be cryptographically signed by the developers using industry best-practice encryption and each component will check the signature before accepting any new OFP loadl
+
+[1.1.9]  (Military GPS Only)
+  MQ-99 shall always use encrypted GPS and will not rely on unencrypted civilian GPS signals to include both position and timing data.
+
+[1.2]  (Damage Tolerant (Prevent, Mitigate, ZT))
+  MQ-99 shall be sufficiently damage tolerant from cyber attack.
+
+[1.2.1]  (Flight Critical Subsystem Backup Mode)
+  Flight critical subsystems shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.1]  (Mission Computer Backup Mode)
+  The Mission Computer shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.1.1]  (Mission Computer Backup Mode Switching)
+  The Mission Computer shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.1.2]  (Flight Control System Backup Mode)
+  The Flight Control System shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.2.1]  (Flight Control System Backup Mode Switching)
+  The Flight Control System shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.1.3]  (Navigation System Backup Mode)
+  The Navigation System shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.3.1]  (Navigation System Backup Mode Switching)
+  The Navigation System shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.1.4]  (Propulsion System Backup Mode)
+  The Propulsion System shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.4.1]  (Propulsion System Backup Mode Switching)
+  The Propulsion System shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.1.5]  (Fuel System Backup Mode)
+  The Fuel System shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.5.1]  (Fuel System Backup Mode Switching)
+  The Fuel System shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.1.6]  (Electrical System Backup Mode)
+  The Electrical System shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.6.1]  (Electrical System Backup Mode Switching)
+  The Electrical System shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.1.7]  (Communications System Backup Mode)
+  The Communications System shall have a backup mode that provides minimal essential subsystem capability with improved security.
+
+[1.2.1.7.1]  (Communications System Backup Mode Switching)
+  The Communications System shall switch into backup mode upon command from the cyber sentinel.
+
+[1.2.2]  (Communications Loss Response)
+  Upon loss of communications, the MQ-99 Berserker shall either continue its mission plan autonomously, or execute a pre-planned loss of communications plan depending on which option was selected in mission planning.
+
+[1.2.3]  (Communications Redundancy)
+  The Communications System shall have a minimum of two different communications channels between the air vehicle and the ground station that utilize different frequencies and radio systems.
+
+[1.2.4]  (Mission Critical Subsystem Resilience)
+  Mission critical subsystems shall be able to accept expected cyber adversity while still being able to accomplish their mission critical tasks.
+
+[1.2.4.1]  (ELINT Sensors on when Needed)
+  The mission computer shall ensure the ELINT sensors are powered on and functioning correctly when the air vehicle is within a potential threat environment.
+
+[1.3]  (Defensible (Mitigate))
+  MQ-99 shall be sufficiently defensible from cyber attack.
+
+[1.3.1]  (Cyber Sentinel Defensibility Capabilities)
+  The MQ-99 Berserker shall include a cyber sentinel subsystem capable of monitoring all information flows between critical subsystems in real-time to detect anomalous behavior.
+
+[1.3.1.1]  (Cyber Sentinel Logging)
+  The cyber sentinel shall log all traffic data for analysis an post-mission review, ensuring that logs are stored securely and protected against tampering.
+
+[1.3.1.10]  (Cyber Sentinel Testing)
+  The cyber sentinel shall be tested throughout its lifecycle by adversarial testers utilizing the expected threat environment to verify performance specifications are met.
+
+[1.3.1.11]  (Cyber Sentinel Blocking of Traffic)
+  The cyber sentinel shall block identified malicious traffic that is attempting to travel across internal air vehicle networks or buses.
+
+[1.3.1.2]  (Cyber Sentinel Isolation of Components)
+  Upon detection of unauthorized access or malicious behavior, the cyber sentinel shall isolate the affected subsystem within 1 second to prevent further propagation of the attack.
+
+[1.3.1.3]  (Cyber Sentinel Autonomous Resetting Components)
+  The cyber sentinel shall have the capability to reset critical subsystems autonomously after isolation to restore functionality.
+
+[1.3.1.4]  (Cyber Sentinel Malicious Behavor Identification)
+  The cyber sentinel shall be able to identify malicious behavior from subsystem components or external entities by monitoring bus traffic in real time.
+
+[1.3.1.4.1]  (Cyber Sentinel Machine Learning for Identification)
+  The cyber sentinel shall employ machine learning models trained on diverse attack scenarios to improve detection of previously unknown threats.
+
+[1.3.1.4.2]  (Cyber Sentinel Pattern Matching for Identification)
+  The cyber sentinel shall utilize pattern matching to identify known or postulated threats.
+
+[1.3.1.5]  (Cyber Sentinel Resetting Components on Command)
+  The cyber sentinel shall have the capability to reset critical subsystems upon receiving a command from operators through the ground station.
+
+[1.3.1.6]  (Cyber Sentinel Autonomous Switching Components to Backup Mode)
+  The cyber sentinel shall have the capability to autonomously switch flight critical subsystems into a more secure, but less capable backup mode autonomously for those components with that capability if a component has been reset and malicious activity is detected again.
+
+[1.3.1.7]  (Cyber Sentinel Switching Components to Backup Mode on Command)
+  The cyber sentinel shall have the capability to switch flight critical subsystems into a more secure, but less capable backup mode upon receiving a command from operators through the ground station for those components with that capability.
+
+[1.3.1.8]  (Cyber Sentinel Reporting)
+  The cyber sentinel shall provide real-time alerts and status updates to the ground control system regarding the state of its cyber defenses and actions taken by the cyber sentinel, and any threats or anomalies identified.
+
+[1.3.1.9]  (Cyber Sentinel Formal Methods Design)
+  The cyber sentinel shall be designed utilizing formal methods to ensure that only intended functionality is present in the design.
+
+[1.3.2]  (Ground Station Defensibility Capabilities)
+  The MQ-99 ground station's design shall include elements required for defensibility including monitoring and logging.
+
+[1.3.2.1]  (Ground Station Logging)
+  The ground station log all communications and system messages in a secure, tamper-proof manner.
+
+[1.3.2.2]  (Ground Station IPS)
+  The ground station shall deploy an intrusion detection and prevention system that continuously monitors for unauthorized access attempts, both from internal users, an and external threats, and automatically takes corrective actions to block or isolate these threats.
+
+[1.3.3]  (Maintenance System Defensibility Capabilities)
+  The MQ-99 maintenance system''s design shall include elements required for defensibility including monitoring and logging.
+
+[1.3.3.1]  (Maintenance System Logging)
+  The maintenance system shall log all communications and system messages in a secure, tamper-proof manner.
+
+[1.3.3.2]  (Maintenance System IPS)
+  The maintenance system shall deploy an intrusion detection and prevention system that continuously monitors for unauthorized access attempts, both from internal users, an and external threats, and automatically takes corrective actions to block or isolate these threats.
+
+[1.3.4]  (System Zeroize)
+  MQ-99 air vehicle shall include a zeroize function that will securely erase all sensitive data when commanded by the ground station.
+
+[1.4]  (Recoverable (Recover, Adapt))
+  MQ-99 shall be sufficiently recoverable from cyber attack.
+
+[1.4.1]  (Single Maintenance Port)
+  All components of the MQ-99 connected to the 1553 bus shall be accessible via a single maintenance port to facilitate forensics and maintenance.
+
+[1.4.1.1]  (Software Loading)
+  All loadable firmware for components attached to the 1553 bus shall be loaded via the maintenance system connected to the single maintenance port that will be accessible both when the air vehicle is containerized for storage, and assembled for flight.
+
+[1.4.1.2]  (Software Loading Switch)
+  Software shall only be permitted to be loaded when the system is put into a maintenance mode via a guarded physical switch that will be automatically switched to flight mode when the maintenance panel is closed.  This permission will be provided via a discrete signal instead of a message over the bus that could be spoofed and this switch will be accessible both when the air vehicle is containerized for storage, and assembled for flight.
+
+[1.4.2]  (Maintenance Loading System Capabilities)
+  A maintenance loader system shall be provided to download and upload data from the MQ-99 Air Vehicle.
+
+[1.4.2.1]  (Maintenance System Complete Load)
+  The maintenance loader shall be able to load all loadable software and firmware on the MQ-99 Air Vehicle through a single user-initiated process that will take no more than 60 minutes to complete.
+
+[1.4.2.2]  (Maintenance System Partial Load)
+  The maintenance loader system shall be able to load any single piece of software or firmware on the MQ-99 Air Vehicle.
+
+[1.4.2.3]  (Maintenance System Download)
+  The maintenance system shall be able to download files or data from any components of the MQ-99 Air Vehicle attached to the 1553 bus.
+
+[1.4.2.4]  (Maintenance System Data Dumping Capabilities)
+  The maintenance system shall be able to read and copy the physical memory space of each MQ-99 component attached to the 1553 data bus.
+
+[1.4.3]  (Software Update Timeline)
+  The prime contractor shall be able to produce emergency updates to software on the MQ-99 in response to identified vulnerabilities or cyber attacks within 72 hours.
+
+[100]  (HT-44 Report Insider Unauthorized Access to Resources)
+  Upon detection of unauthorized access to <system> resources by authorized subjects, the <system> shall report facts about the authorized subjects attempting unauthorized access to a <responsible entity> within <constraints> without <restraints>.
+
+[101]  (HT-45 Mitigate Insider Unauthorized Access to Resources)
+  Upon detection of unauthorized access to <system> resources by authorized subjects, the <system> shall render the unauthorized access to <system> resources harmless within <constraints> without <restraints>.
+
+[102]  (HT-46 Resilient to Regular Insiders)
+  The <system> shall ensure the <system’s mission> is resilient to the loss of availability of <Uirsp (resilience target)> individuals with regular system privilege (e.g., user, operator).
+
+[103]  (HT-47 Resilient to Elevated Insiders)
+  The <system> shall ensure the <system’s mission> is resilient to the loss of availability of <Uiesp (resilience target)> individuals with elevated system privilege (e.g., maintainers, root, admin).
+
+[104]  (HT-48 Resilient to Unreliable Devices)
+  The <system> shall ensure the <system’s mission> is resilient to the failure of <Ud (resilience target)> unreliable devices.
+
+[105]  (HT-49 Resilient to Data Flows)
+  The <system> shall ensure the <system’s mission> is resilient to the loss of <integrity or availability> of <Udf (resilience target)> data flows.
+
+[106]  (HT-50 Resilient to Regular User Malicious Data)
+  The <system> shall ensure the <system’s mission> is resilient to <Mirsp (resilience target)> individuals writing malicious data with regular system privilege (e.g., user, operator).
+
+[107]  (HT-51 Resilient to Elevated User Malicious Data)
+  The <system> shall ensure the <system’s mission> is resilient to <Miesp (resilience target)> individuals writing malicious data with elevated system privilege (e.g., maintainers, root, admin).
+
+[108]  (HT-52 Resilient to Regular Process Malicious Data)
+  The <system> shall ensure the <system’s mission> is resilient to <Mprsp (resilience target)> processes writing malicious data with regular system privilege.
+
+[109]  (HT-53 Resilient to Elevated Process Malicious Data)
+  The <system> shall ensure the <system’s mission> is resilient to <Mpesp (resilience target)> processes writing malicious data with elevated system privilege (e.g., root, admin).
+
+[110]  (HT-54 Restoration)
+  After a threat event has been rendered harmless, the <system> shall restore any lost mission capability within <constraints> without <restraints>.
+
+[111]  (CSA-01 Control Access)
+  System shall only allow identified, authenticated, and authorized persons and non-person entities (including all assigned cyber defenders and their tools) access or interconnection to system or sub-system elements. The capability shall enforce a validation mechanism to protect the C, I, A of system resources (e.g., memory, files, interfaces, logical networks). The system shall employ anti-tamper measures that include features for protection of critical system components, information technologies, and maintenance of technology/program protection. Physical access to the system shall also be controlled.
+
+[112]  (CSA-02 Reduce System's Cyber Detectability)
+  System survivability requires signaling and communications (both wired and wireless) implemented by the system (or state “supported by system/capability”) shall minimize the ability of an adversary to monitor and/or target system and/or supported DoD weapon systems through its emanations, which may include deception.
+
+[113]  (CSA-03 Secure Transmissions and Communications)
+  System shall ensure all transmissions and communications of data ‘in transit’ are protected commensurate with its confidentiality and integrity requirements. System shall only use NSA certified cryptographic capabilities.” [if a National Security System, add: “System shall develop, coordinate and maintain a System TRANSEC Plan (STP) and a Key Management Plan throughout the system’s lifecycle.”]
+
+[114]  (CSA-04 Protect System's Information from Exploitation)
+  System shall ensure all data ‘at rest’ is protected commensurate with its confidentiality and integrity requirements. System shall prevent unauthorized access, use, modification, and transfer/removal of data, including attempted exfiltration, from the system to unauthorized person and non-person entities throughout the system’s lifecycle (including development).
+
+[115]  (CSA-05 Partition and Ensure Critical Functions at Mission Completion Performance Levels)
+  System partitioning shall implement technical/logical mitigations including logical and physical segmentation. The system shall be able to maintain mission critical functions at minimum performance thresholds identified within the system’s Concept of Operations. Compromise of non-critical functions shall not significantly impact system mission capability.
+
+[116]  (CSA-06 Minimize and Harden Attack Surfaces)
+  System shall automatically disable all unauthorized ports, protocols, and services (PPS), including access points, by default. Open PPS should be filtered, to the greatest extent practical, so as to block communication to/from the system by unauthorized parties. Any deviations from PPS baselines, shall be approved and documented by a configuration management board. System shall support automated monitoring and logging of system attack surface and associated cyber-events. Any removable media use must be approved, documented and strictly monitored.
+
+[117]  (CSA-07 Baseline & Monitor Systems and Detect Anomalies)
+  System shall implement and maintain a cyber survivability configuration baseline for its GOTS/COTS HW, SW, FW and open source modules, by version number, to ensure an operationally acceptable cyber risk posture 24/7 (note: drives CDRLs). System shall monitor, detect and report system health status and anomalies indicative of cyber events, based on its current adversary cyber threat intelligence, CONOPS and Mission Relevant Terrain in Cyberspace (MRT-C). Applicable report detail shall be provided to users, system operators and assigned cyber defenders (e.g., system shall report anomalies such as configuration changes, cyber-related event indicators, slowed processing, or loss of functionality within T = (# of seconds/minutes) [specified by sponsor]).
+
+[118]  (CSA-08 Manage System Performance and Enable Cyberspace Defense)
+  If anomalies are detected and/or cyber-events degrade system capability, the system shall be sufficiently resilient to mitigate cyber-event effects through orderly, structured and prioritized system responses, in order to ensure minimum mission functionality requirements [system functionality threshold specified by sponsor] to complete the current mission or return for recovery. The system shall enable assigned cyber defenders to impose effects on adversaries to counter their operations and objectives. Alternatively, the mission commander shall be able to selectively disconnect/disable subsystems that are not critical as well as isolate the system from integrated platform systems and/or Department of Defense Information Network (DoDIN).
+
+[119]  (CSA-09 Recover System Capabilities)
+  After a cyber-event, the system shall be capable of being restored to full functionality from a trusted source; at a minimum, being restored to partial mission capability, between mission cycles or within xx hours [specified by sponsor], to fight another day. System recovery shall prioritize cyber operational resiliency functions.
+
+[120]  (CSA-10 Actively Manage System's Configurations to Achieve and Maintain an Operationally relevant Cyber Risk Posture)
+  Throughout a system’s lifecycle and within one standard mission cycle of xx hours [specified by sponsor] of identification of a drop in cyber risk posture below its commensurate CSRC level, the system shall have a configuration management process, supported by automated capabilities and technology refresh options, to achieve and continuously maintain an objectively assessed and operationally-relevant risk posture. The process shall include inputs from operators, defenders and intel analysts to continuously assess changes in adversary threat, and include a machine readable Bill of Materials (BOM) of the system’s GOTS/COTS HW, SW, FW and open source modules for a supply chain risk assessment prior to each milestone decision and supported release. The process shall determine the sufficiency of system cyber survivability, and support a DevOps framework to prioritize vulnerability mitigation and remediation in the system and connected infrastructure with greatest mission risks.
+
+[121]  (CSA-01 1.1)
+  The system shall ensure that only authenticated User-to-device and device-to-device entities are allowed access or interconnection to the system or sub-elements within its boundaries.
+
+[122]  (CSA-01 1.2)
+  The system shall enforce least privilege access for authenticated persons and non-person entities necessary to accomplish assigned tasks.
+
+[123]  (CSA-02 2.1)
+  The system shall protect against adversary detection and exploitation of information leakage due to electromagnetic emanations.
+
+[124]  (CSA-02 2.2)
+  The system shall minimize connections (wired/wireless) to meet mission requirements.
+
+[125]  (CSA-03 3.1)
+  The system shall implement data protection measures for information transmissions and communications in transit (per appropriate classification levels).
+
+[126]  (CSA-04 4.1)
+  The system shall ensure information integrity and performance as validated and baselined.
+
+[127]  (CSA-04 4.2)
+  The system shall protect data while at rest (per appropriate classification levels).
+
+[128]  (CSA-04 4.3)
+  The system shall implement safeguards to deter, detect, prevent, and respond to software, hardware, and firmware tampering.
+
+[129]  (CSA-04 4.4)
+  The system shall employ sanitization processes at the system, subsystem, and component levels.
+
+[130]  (CSA-05 5.1)
+  The system design shall partition mission critical” safety critical” and CPI functionality from less critical functions and segregate classified information.
+
+[131]  (CSA-05 5.2)
+  The system shall ensure safety critical and Mission Critical Functions are prioritized appropriately to ensure mission completion.
+
+[132]  (CSA-06 6.1)
+  The system shall provide the capability to configure external interfaces as required to perform safety critical and Mission Critical Functions.
+
+[133]  (CSA-06 6.2)
+  The system shall ensure interfaces capabilities maintain their mission effectiveness while under a Cyber Attack, while remaining accessible for safety/mission functionality.
+
+[134]  (CSA-07 7.1)
+  The system shall monitor operational parameters, boundaries, and configuration controls.  Prerequisite CSA 4.1
+
+[135]  (CSA-07 7.2)
+  The system shall analyze performance through a baseline comparison to detect anomalies and attacks.
+
+[136]  (CSA-07 7.3)
+  The system shall generate and store logs.
+
+[137]  (CSA-08 8.1)
+  The system shall alert Users of detected anomalies and attacks. Prerequisite: CSA 5, 7
+
+[138]  (CSA-08 8.2)
+  The system shall provide capabilities to shed non-Mission Critical Functions, systems/subsystems, and interfaces. Prerequisite: CSA 5, 7
+
+[139]  (CSA-08 8.3)
+  The system shall maintain Mission Critical Functions in a Cyber-contested operational environment during/after observed anomaly(ies). Prerequisite: CSA 4, 5 & 7
+
+[140]  (CSA-08 8.4)
+  The system shall maintain Safety Critical Functions in a Cyber-contested operational environment during/after observed anomaly(ies). Prerequisite: CSA 4, 5 & 7
+
+[141]  (CSA-08 8.5)
+  The system shall fail secure when Mission Critical Functions are no longer operational in a contested environment. Prerequisite: CSA 4, 5 & 7
+
+[142]  (CSA-09 9.1)
+  The system shall provide the capability to recover to a known state in near real time.
+
+[143]  (CSA-10 10.1)
+  The system shall have the capability to update scans to ensure appropriate, applicable requirements are captured (e.g., STIG , SRG, etc.) for:
+(a) hardware
+(b) software
+(c) firmware
+
+[144]  (CSA-10 10.2)
+  The program/system owner shall actively manage System’s Configurations to achieve and maintain an operationally relevant Cyber Survivability Risk Posture (CSRP) by allocating & funding resources (technical reach-back AND resources to rapidly assess/mitigate risk from emergent cyber-threats) throughout the system’s life cycle.
+
+[57]  (HT-1 Prevent Unauthorized Data)
+  The <system> shall prevent unauthorized data from being written to the <system>.
+
+[58]  (HT-2 Detect Unauthorized Data)
+  The <system> shall detect unauthorized data in the <system> within <constraints> without <restraints>.
+
+[59]  (HT-3 Report Unauthorized Data Detection)
+  Upon detection of unauthorized data in the <system>, <system> shall report facts about the unauthorized data to a <responsible entity> within <constraints> without <restraints>.
+
+[60]  (HT-4 Render Unauthorized Data Harmless)
+  Upon detection of unauthorized data in the <system>, the <system> shall render the unauthorized data harmless within <constraints> without <restraints>.
+
+[61]  (HT-5 Prevent Use of Unauthorized Data)
+  The <system> shall prevent cyberspace assets from using unauthorized data that was written to the <system>.
+
+[62]  (HT-6 Detect Anomalous Behavior)
+  The <system> shall detect anomalous <system> behavior within <constraints> without <restraints>.
+
+[63]  (HT-7 Report Anomalous Behavior Detection)
+  Upon detection of anomalous <system> behavior, the <system> shall report facts about the anomalous <system> behavior to a <responsible entity> within <constraints> without <restraints>.
+
+[64]  (HT-8 Detect Unauthorized Programs)
+  The <system> shall prevent the execution of unauthorized programs in the <system>.
+
+[65]  (HT-9 Detect Unauthorized Programs)
+  The <system> shall detect unauthorized programs within <constraints> without <restraints>.
+
+[66]  (HT-10 Unauthorized Program Reporting)
+  Upon detection of an unauthorized program in the <system>, the <system> shall report facts about the unauthorized program to a <responsible entity> within <constraints> without <restraints>.
+
+[67]  (HT-11 Render Unauthorized Program Harmless)
+  Upon detection of an unauthorized program in the <system>, the <system> shall render the unauthorized program harmless within <constraints> without <restraints>.
+
+[68]  (HT-12 Prevent Unauthorized Execution of Authorized Programs)
+  The <system> shall prevent the unauthorized execution of authorized programs in the <system>.
+
+[69]  (HT-13 Detect Unauthorized Execution of Authorized Programs)
+  The <system> shall detect the unauthorized execution of authorized programs within <constraints> without <restraints>.
+
+[70]  (HT-14 Report Unauthorized Execution of Authorized Programs)
+  Upon detection of the unauthorized execution of an authorized program, the <system> shall report facts about the unauthorized execution of authorized programs to a <responsible entity> within <constraints> without <restraints>.
+
+[71]  (HT-15 Mitigate Unauthorized Execution of Authorized Programs)
+  Upon detection of the unauthorized execution of an authorized program, the <system> shall render the unauthorized instances of authorized programs harmless within <constraints> without <restraints>.
+
+[72]  (HT-16 Prevent Denial of Authorized Data)
+  When exposed to <threat event>, the system shall prevent the denial of authorized data.
+
+[73]  (HT-17 Detect Denial of Authorized Data)
+  The <system> shall detect the denial of authorized data within <constraints> without <restraints>.
+
+[74]  (HT-18 Report Denial of Authorized Data)
+  Upon detection of denial of authorized data, the <system> shall report facts about the denial of authorized data to a <responsible entity> within <constraints> without <restraints>.
+
+[75]  (HT-19 Prevent Unauthorized Comprehension)
+  The <system> shall prevent an unauthorized entity from comprehending <restricted system data> until the <restricted system data> is no longer operationally relevant.
+
+[76]  (HT-20 Detect Unauthorized Access to Restricted Data)
+  The <system> shall detect unauthorized access to restricted <system> data within <constraints> without <restraints>.
+
+[77]  (HT-21 Report Unauthorized Access to Restricted Data)
+  Upon detection of unauthorized access to restricted <system> data, the <system> shall report facts about the unauthorized access to a <responsible entity> within <constraints> without <restraints>.
+
+[78]  (HT-22 Remove Unauthorized Access to Restricted Data)
+  Upon detection of unauthorized access to restricted <system> data, the <system> shall remove the unauthorized access to restricted <system> data within <constraints> without <restraints>.
+
+[79]  (HT-23 Prevent Unauthorized Data Exfiltration)
+  The <system> shall prevent unauthorized data from leaving the <system>.
+
+[80]  (HT-24 Detect Unauthorized Data Exfiltration)
+  The <system> shall detect unauthorized data leaving the <system> within <constraints> without <restraints>.
+
+[81]  (HT-25 Report Unauthorized Data Exfiltration)
+  Upon detection of unauthorized data leaving the <system>, the <system> shall report facts about the unauthorized data leaving the <system> to a <responsible entity> within <constraints> without <restraints>.
+
+[82]  (HT-26 Prevent Unauthorized Data Connections In)
+  The <system> shall prevent unauthorized data connections to the <system>.
+
+[83]  (HT-27 Detect Unauthorized Data Connections In)
+  The <system> shall detect unauthorized data connections to the <system> within <constraints> without <restraints>.
+
+[84]  (HT-28 Prevent Unauthorized Data Connections Out)
+  The <system> shall prevent unauthorized data connections from the <system>.
+
+[85]  (HT-29 Detect Unauthorized Data Connections Out)
+  The <system> shall detect unauthorized data connections from the <system> within <constraints> without <restraints>.
+
+[86]  (HT-30 Report Unauthorized Data Connections)
+  Upon detection of unauthorized data connections in the <system>, the <system> shall report facts about the unauthorized data connections to a <responsible entity> within <constraints> without <restraints>.
+
+[87]  (HT-31 Mitigate Unauthorized Data Connections)
+  Upon detection of unauthorized data connections in the <system>, the <system> shall render the unauthorized data connections harmless within <constraints> without <restraints>.
+
+[88]  (HT-32 Prevent Unauthorized Assets)
+  The <system> shall prevent unauthorized cyberspace assets in the <system>.
+
+[89]  (HT-33 Detect Unauthorized Assets)
+  The <system> shall detect unauthorized cyberspace assets in the <system> within <constraints> without <restraints>.
+
+[90]  (HT-34 Report Unauthorized Assets)
+  Upon detection of unauthorized cyberspace assets in the <system>, the <system> shall report facts about the unauthorized cyberspace assets to a <responsible entity> within <constraints> without <restraints>.
+
+[91]  (HT-35 Mitigate Unauthorized Assets)
+  Upon detection of unauthorized cyberspace assets in the <system>, the <system> shall render the unauthorized cyberspace assets harmless within <constraints> without <restraints>.
+
+[92]  (HT-36 Prevent Unauthorized Physical Access)
+  The <system> shall prevent unauthorized individuals from physical access to the <system>.
+
+[93]  (HT-37 Detect Unauthorized Physical Access)
+  The <system> shall detect unauthorized individuals with physical access to the <system> within <constraints> without <restraints>.
+
+[94]  (HT-38 Prevent Unauthorized Access to Resources)
+  The <system> shall prevent unauthorized access to <system> resources.
+
+[95]  (HT-39 Detect Unauthorized Access to Resources)
+  The <system> shall detect unauthorized access to <system> resources within <constraints> without <restraints>.
+
+[96]  (HT-40 Report Unauthorized Access to Resources)
+  Upon detection of unauthorized access in the <system>, the <system> shall report facts about the unauthorized access to a <responsible entity> within <constraints> without <restraints>.
+
+[97]  (HT-41 Mitigate Unauthorized Access to Resources)
+  Upon detection of unauthorized access in the <system>, the <system> shall remove the unauthorized system access within <constraints> without <restraints>.
+
+[98]  (HT-42 Prevent Insider Unauthorized Access to Resources)
+  The <system> shall prevent authorized subjects with <system> access from unauthorized access to <system> resources.
+
+[99]  (HT-43 Detect Insider Unauthorized Access to Resources)
+  The <system> shall detect unauthorized access to <system> resources by authorized subjects within <constraints> without <restraints>.
+
+[C-1]  (Capability Requirement Spec)
+  (no text)
+
+[C-1.26]  (Operational Readiness Requirement)
+  The MQ-99 Berserker shall be capable of achieving full operational readiness through staged power-up procedures that ensure all systems are functional and mission-ready within a predefined timeframe.
+
+[C-1.27]  (Electrical Distribution Requirement)
+  The MQ-99 Berserker shall continuously provide stable and regulated power to all operational subsystems as required, ensuring uninterrupted system performance throughout mission execution.
+
+[C-1.28]  (Power Management Requirement)
+  The MQ-99 Berserker shall be capable of dynamically managing power supply to subsystems, including the ability to safely and promptly cut power to any subsystem upon receiving a designated signal
+
+[C-1.29]  (Final Systems Check)
+  The MQ-99 Berserker shall perform a comprehensive check of all systems to confirm operational integrity and readiness before mission launch.
+
+[C-1.30]  (Establish Navigation  )
+  The MQ-99 Berserker shall establish and calibrate its navigation systems to ensure accurate and reliable locational data is available throughout the mission.
+
+[C-1.31]  (Power Diagnostics)
+  The MQ-99 Berserker shall continuously conduct power system diagnostics throughout its operation to ensure all electrical systems maintain optimal functionality and address any issues immediately as they arise.
+
+[C-1.33]  (Mission Computer)
+  The mission computer shall direct and coordinate all Air Vehicle subsystems
+
+[C-1.33.1]  (Mission Computer ELINT Direction)
+  The mission computer shall ensure the ELINT sensors are powered on when the air vehicle is within a threat environment
+
+[C-1.33.10]  (Mission Computer Fuel System Direction)
+  The mission computer shall direct and coordinate the operation of the fuel management system.
+
+[C-1.33.11]  (Mission Computer Provided Data to the Fuel System)
+  The mission computer shall provide correct, current, and complete fuel flow required to the fuel system.
+
+[C-1.33.12]  (Mission Computer Stores Management System Direction)
+  The mission computer shall direct and coordinate the operation of the stores management system.
+
+[C-1.33.13]  (Mission Computer Provided Data to the Stores Management System)
+  The mission computer shall provide correct, current, and complete vehicle position, targeting, and weapons data to the stores management system.
+
+[C-1.33.2]  (Mission Computer Communications System Direction)
+  The mission computer shall direct and coordinate the operation of the communications system.
+
+[C-1.33.3]  (Mission Computer EO/IR System Direction)
+  The mission computer shall direct and coordinate the operation of the EO/IR system.
+
+[C-1.33.4]  (Mission Computer Electrical System Direction)
+  The mission computer shall direct and coordinate the operation of the electrical system.
+
+[C-1.33.5]  (Mission Computer Parachute System Direction)
+  The mission computer shall direct and coordinate the operation of the parachute system.
+
+[C-1.33.6]  (Mission Computer Autopilot System Direction)
+  The mission computer shall direct and coordinate the operation of the autopilot system.
+
+[C-1.33.7]  (Mission Computer Provided Data to the Autopilot)
+  The mission computer shall provide correct, current, and complete waypoint data, position data, and thrust available data to the autopilot.
+
+[C-1.33.8]  (Mission Computer Navigation System Direction)
+  The mission computer shall direct and coordinate the operation of the navigation system.
+
+[C-1.33.9]  (Mission Computer Engine Controller Direction)
+  The mission computer shall direct and coordinate the operation of the engine controller.
+
+[MR]  (Mission Requirement Spec)
+  The UAS system shall comply with all Mission Requirements defined.
+
+[MR - 1]  (Air Defenses Destroyed)
+  The UAS shall destroy a threshold of X% air defenses with an objective of X%
+
+[MR - 10]  (Recovery Rate)
+  The MQ-99 Berserker UAS shall achieve a recovery rate of at least 85%, ensuring successful return and landing after mission completion under standard operating and environmental conditions.
+
+[MR - 11]  (Survivability)
+  The MQ-99 Berserker UAS shall maintain a survivability rate of at least 75% during mission operations in contested environments, accounting for threat detection, avoidance systems, and defensive countermeasures.
+
+[MR - 12]  (Video Latency)
+  The Berserker EO/IR sensor shall transmit video with a latency no greater than 300 milliseconds under nominal operating conditions.
+
+[MR - 13]  (Dropped Frames)
+  The Berserker EO/IR Sensor shall not drop more than 5 frames per hour during video transmission.
+
+[MR - 14]  (EO/IR Accuracy)
+  The Berserker EO/IR sensor shall achieve a classification accuracy of at least 90% when identifying targets under standard operating conditions.
+
+[MR - 15]  (Time to Deploy)
+  The MQ-99 Berserker UAS shall be fully deployed and operational within 8 minutes or less after the launch mechanism is in place.
+
+[MR - 16]  (Time to Launch)
+  The Berserker enterprise system shall be fully configured and ready for launch within 180 minutes of initiation, including all necessary pre-flight checks and system preparations.
+
+[MR - 17]  (Arid Deployment)
+  The Ground Control Station (GCS) shall be capable of full operation and deployment in arid environments, withstanding extreme heat, dust, and dry conditions without degradation in performance.
+
+[MR - 18]  (Dropped Packets)
+  The Ground Control Station (GCS) shall maintain a packet drop rate of less than 2.5 packets per hour during data transmission with the MQ-99 Berserker UAS under standard operating conditions.
+
+[MR - 19]  (Target Lethality)
+  The MQ-99 Berserker UAS, when equipped with mission-specific munitions, shall achieve a lethality rate of at least 90% against designated targets under operational conditions.
+
+[MR - 2]  (Aircraft Lost)
+  The UAS shall destroy a threshold of X aircraft with an objective of X.
+
+[MR - 20]  (Lateral Acceleration)
+  The MQ-99 Berserker UAS shall sustain a maximum lateral acceleration of 3 g’s (29.4 m/s²) during maneuvering without exceeding structural or operational limits.
+
+[MR - 21]  (EO/IR Frame Tran. Rate)
+  The Berserker EO/IR sensor shall transmit video at a rate of 30 frames per second (FPS) to ensure smooth and continuous video feed during operation.
+
+[MR - 22]  (Ground Control latency)
+  The Ground Control Station shall maintain a communication latency of no greater than 500 milliseconds when transmitting and receiving data with the MQ-99 Berserker UAS under normal operating conditions.
+
+[MR - 23]  (Ground Control Deployability)
+  The Ground Control Station shall achieve a deployability rate of at least 90%, ensuring successful setup and operation in various field conditions.
+
+[MR - 24]  (EO/IR False Classification Rate)
+  The Berserker EO/IR sensor shall have a false classification rate of no more than 20% under standard operating conditions.
+
+[MR - 25]  (Effective IR Resolution Distance)
+  The Berserker EO/IR sensor shall provide an effective resolution of at least 700 meters, ensuring clear identification and targeting capability at that distance.
+
+[MR - 3]  (Weapons on Target)
+  The UAS shall have X number of weapons available for the mission target.
+
+[MR - 4]  (Aircraft Survivability)
+  The UAS shall have a survivability of X within a combative airspace.
+
+[MR - 5]  (IRQ Presenece in KWT)
+  The UAS shall be available in KWT with a presence in IRQ
+
+[MR - 6]  (Attrition)
+  The UAS shall not exceed an attrition rate of X
+
+[MR - 7]  (Max Speed)
+  The MQ-99 Berserker UAS shall achieve a maximum speed of 255 knots in level flight under standard atmospheric conditions.
+
+[MR - 8]  (Flight Time)
+  The MQ-99 Berserker UAS shall have a minimum flight endurance of 15 hours while carrying the maximum payload capacity of 1,500 pounds under standard operating conditions.
+
+[MR - 9]  (Max Altitude)
+  The MQ-99 Berserker UAS shall operate at a maximum altitude of 40,000 feet without degradation of performance or system reliability.
+
+[MR - C-1.1]  (Conduct Target Location Tag)
+  The MQ-99 Berserker UAS shall identify, tag, and store the potential target's location using data from the EO/IR Sensor and Executive Control Subsystem for transmission after the video feed process.
+
+[MR - C-1.2]  (Fly to Waypoint)
+  The MQ-99 Berserker UAS shall autonomously navigate to a confirmed waypoint and report the result of the navigation.

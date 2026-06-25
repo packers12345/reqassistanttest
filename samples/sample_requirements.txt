@@ -1,0 +1,5 @@
+1. The system shall process user requests within 2 seconds.
+2. A user can access the dashboard at any time.
+3. The software should be flexible enough to handle various inputs and produce appropriate outputs.
+4. It shall send notifications to users when their data is updated or modified.
+5. The system shall never fail during operation and always be available.

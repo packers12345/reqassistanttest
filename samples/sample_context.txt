@@ -1,0 +1,1 @@
+This system is a UAV (Unmanned Aerial Vehicle) flight control system designed for autonomous surveillance missions. The system name is "SkyWatch Flight Controller". It operates in real-time environments with strict safety and reliability requirements.

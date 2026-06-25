@@ -1,0 +1,16 @@
+# CQ-IR04: What category does a given rule belong to?
+# Expected: Category name for each rule
+# Shows full rule-to-category hierarchy
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?ruleId ?ruleLabel ?categoryLabel
+WHERE {
+    ?rule a incose-req:Rule ;
+          incose-req:hasRuleId ?ruleId ;
+          rdfs:label ?ruleLabel ;
+          incose-req:belongsToCategory ?cat .
+    ?cat rdfs:label ?categoryLabel .
+}
+ORDER BY ?ruleId

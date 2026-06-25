@@ -1,0 +1,30 @@
+# CQ-IR09: What violations were identified in a specific assessment?
+# Expected: List of violations with rule, requirement, and severity
+# Links Assessment → Result → Violation chain explicitly.
+# Added per design review to ensure temporal indexing of assessments.
+# Requires ABox instance data
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?assessor ?date ?reqId ?ruleId ?ruleLabel ?severityLabel ?affectedText
+WHERE {
+    ?assessment a incose-req:Assessment ;
+                incose-req:hasResult ?result .
+    OPTIONAL { ?assessment incose-req:hasAssessor ?assessor . }
+    OPTIONAL { ?assessment incose-req:hasAssessmentDate ?date . }
+
+    ?result incose-req:includesViolation ?violation .
+
+    ?violation incose-req:violatesRule ?rule ;
+               incose-req:inheresInRequirement ?req ;
+               incose-req:hasSeverityRating ?severity .
+
+    ?rule incose-req:hasRuleId ?ruleId ;
+          rdfs:label ?ruleLabel .
+    ?req incose-req:hasRequirementId ?reqId .
+    ?severity rdfs:label ?severityLabel .
+
+    OPTIONAL { ?violation incose-req:hasAffectedText ?affectedText . }
+}
+ORDER BY ?reqId ?ruleId

@@ -1,0 +1,20 @@
+# CQ-IR03: Which rules test a given quality characteristic (e.g., "Unambiguous")?
+# Expected: List of rules with IDs
+# Parameter: Replace "Unambiguous" with target characteristic label
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?ruleId ?ruleLabel ?category
+WHERE {
+    ?char rdfs:label ?charLabel ;
+          incose-req:hasCharacteristicId ?charId .
+    FILTER(?charLabel = "Unambiguous")
+
+    ?rule incose-req:testsCharacteristic ?char ;
+          incose-req:hasRuleId ?ruleId ;
+          rdfs:label ?ruleLabel ;
+          incose-req:belongsToCategory ?cat .
+    ?cat rdfs:label ?category .
+}
+ORDER BY ?ruleId

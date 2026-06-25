@@ -1,0 +1,23 @@
+# CQ-IR08: Which rules have no corresponding violations in a given assessment
+#           (untested rules)?
+# Expected: List of rule IDs not triggered in the assessment
+# Requires ABox instance data
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?ruleId ?ruleLabel ?category
+WHERE {
+    ?rule a incose-req:Rule ;
+          incose-req:hasRuleId ?ruleId ;
+          rdfs:label ?ruleLabel ;
+          incose-req:belongsToCategory ?cat .
+    ?cat rdfs:label ?category .
+
+    FILTER NOT EXISTS {
+        ?violation incose-req:violatesRule ?rule .
+        ?result incose-req:includesViolation ?violation .
+        ?assessment incose-req:hasResult ?result .
+    }
+}
+ORDER BY ?ruleId

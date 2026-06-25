@@ -1,0 +1,14 @@
+# CQ-IR01: What quality characteristics apply to individual requirements?
+# Expected: List of 9 characteristics (C1-C9)
+
+PREFIX incose-req: <http://sie.arizona.edu/ontology/incose-req#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?id ?label ?description
+WHERE {
+    ?char a incose-req:IndividualQualityCharacteristic ;
+          incose-req:hasCharacteristicId ?id ;
+          rdfs:label ?label .
+    OPTIONAL { ?char incose-req:hasShortDescription ?description . }
+}
+ORDER BY ?id

@@ -1,0 +1,772 @@
+@prefix incose-req: <http://sie.arizona.edu/ontology/incose-req#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+
+# =============================================================================
+# INCOSE-REQ ABox: Rule Instances, Characteristics, and Categories
+#
+# Instantiates the INCOSE Guide to Writing Requirements V4 (1 Jul 2023)
+# taxonomy: 42 rules, 15 quality characteristics, 14 rule categories,
+# 4 severity ratings, 3 applicability levels.
+#
+# Cross-reference matrix (Rule x Characteristic) derived from
+# INCOSE Guide V4 Appendix E, p.137.
+#
+# Rule applicability and project dictionary requirements derived from
+# INCOSE Guide V4 Appendix D, pp.131-136.
+#
+# Version: 0.1.0
+# =============================================================================
+
+# =============================================================================
+# SEVERITY RATINGS
+# =============================================================================
+
+incose-req:SeverityLow a incose-req:SeverityRating ;
+    rdfs:label "Low" ;
+    incose-req:hasOrdinalRank 1 ;
+    incose-req:hasShortDescription "Minor issue with minimal impact on requirement quality." .
+
+incose-req:SeverityMedium a incose-req:SeverityRating ;
+    rdfs:label "Medium" ;
+    incose-req:hasOrdinalRank 2 ;
+    incose-req:hasShortDescription "Moderate issue that may affect downstream processes." .
+
+incose-req:SeverityHigh a incose-req:SeverityRating ;
+    rdfs:label "High" ;
+    incose-req:hasOrdinalRank 3 ;
+    incose-req:hasShortDescription "Significant issue likely to cause problems in verification, implementation, or traceability." .
+
+incose-req:SeverityCritical a incose-req:SeverityRating ;
+    rdfs:label "Critical" ;
+    incose-req:hasOrdinalRank 4 ;
+    incose-req:hasShortDescription "Severe issue that renders the requirement unusable or dangerous." .
+
+# =============================================================================
+# RULE APPLICABILITY LEVELS
+# =============================================================================
+
+incose-req:CNCR a incose-req:RuleApplicability ;
+    rdfs:label "CNCR" ;
+    incose-req:hasShortDescription "Compulsory for Needs and Compulsory for Requirements." .
+
+incose-req:RNCR a incose-req:RuleApplicability ;
+    rdfs:label "RNCR" ;
+    incose-req:hasShortDescription "Recommended for Needs and Compulsory for Requirements." .
+
+incose-req:CR a incose-req:RuleApplicability ;
+    rdfs:label "CR" ;
+    incose-req:hasShortDescription "Compulsory for Requirements (Optional for Needs)." .
+
+# =============================================================================
+# INDIVIDUAL QUALITY CHARACTERISTICS (C1-C9)
+# INCOSE Guide V4, Section 2
+# =============================================================================
+
+incose-req:C1-Necessary a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Necessary" ;
+    incose-req:hasCharacteristicId "C1" ;
+    incose-req:hasShortDescription "The requirement defines an essential capability, characteristic, constraint, or quality factor." .
+
+incose-req:C2-Appropriate a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Appropriate" ;
+    incose-req:hasCharacteristicId "C2" ;
+    incose-req:hasShortDescription "The specific intent and amount of detail is appropriate to the level of the entity to which it refers." .
+
+incose-req:C3-Unambiguous a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Unambiguous" ;
+    incose-req:hasCharacteristicId "C3" ;
+    incose-req:hasShortDescription "The requirement is stated such that it can be interpreted in only one way." .
+
+incose-req:C4-Complete a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Complete" ;
+    incose-req:hasCharacteristicId "C4" ;
+    incose-req:hasShortDescription "The requirement sufficiently describes the necessary capability, characteristic, constraint, or quality factor to meet the entity need." .
+
+incose-req:C5-Singular a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Singular" ;
+    incose-req:hasCharacteristicId "C5" ;
+    incose-req:hasShortDescription "The requirement states a single capability, characteristic, constraint, or quality factor." .
+
+incose-req:C6-Feasible a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Feasible" ;
+    incose-req:hasCharacteristicId "C6" ;
+    incose-req:hasShortDescription "The requirement can be realized within entity constraints with acceptable risk." .
+
+incose-req:C7-Verifiable a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Verifiable/Validatable" ;
+    incose-req:hasCharacteristicId "C7" ;
+    incose-req:hasShortDescription "The requirement is structured and worded such that its realization can be proven to the stakeholders' satisfaction." .
+
+incose-req:C8-Correct a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Correct" ;
+    incose-req:hasCharacteristicId "C8" ;
+    incose-req:hasShortDescription "The requirement is an accurate representation of the entity need from which it was transformed." .
+
+incose-req:C9-Conforming a incose-req:IndividualQualityCharacteristic ;
+    rdfs:label "Conforming" ;
+    incose-req:hasCharacteristicId "C9" ;
+    incose-req:hasShortDescription "The individual requirement conforms to an approved style guide or similar standard." .
+
+# =============================================================================
+# SET QUALITY CHARACTERISTICS (C10-C15)
+# INCOSE Guide V4, Section 3
+# =============================================================================
+
+incose-req:C10-Complete a incose-req:SetQualityCharacteristic ;
+    rdfs:label "Complete (Set)" ;
+    incose-req:hasCharacteristicId "C10" ;
+    incose-req:hasShortDescription "The requirement set stands alone such that it sufficiently describes the necessary capabilities, characteristics, constraints, and/or quality factors." .
+
+incose-req:C11-Consistent a incose-req:SetQualityCharacteristic ;
+    rdfs:label "Consistent" ;
+    incose-req:hasCharacteristicId "C11" ;
+    incose-req:hasShortDescription "The set of requirements contains individual requirements that are unique, do not conflict, and are not duplicated." .
+
+incose-req:C12-Feasible a incose-req:SetQualityCharacteristic ;
+    rdfs:label "Feasible (Set)" ;
+    incose-req:hasCharacteristicId "C12" ;
+    incose-req:hasShortDescription "The requirement set can be realized within entity constraints with acceptable risk." .
+
+incose-req:C13-Comprehensible a incose-req:SetQualityCharacteristic ;
+    rdfs:label "Comprehensible" ;
+    incose-req:hasCharacteristicId "C13" ;
+    incose-req:hasShortDescription "The requirement set is written such that it is clear, structured, and readable." .
+
+incose-req:C14-AbleToBeValidated a incose-req:SetQualityCharacteristic ;
+    rdfs:label "Able to be Validated" ;
+    incose-req:hasCharacteristicId "C14" ;
+    incose-req:hasShortDescription "The requirement set can be proven to satisfy its intended use in the operational environment." .
+
+incose-req:C15-Correct a incose-req:SetQualityCharacteristic ;
+    rdfs:label "Correct (Set)" ;
+    incose-req:hasCharacteristicId "C15" ;
+    incose-req:hasShortDescription "The requirement set accurately represents the entity needs from which it was transformed." .
+
+# =============================================================================
+# RULE CATEGORIES (14)
+# INCOSE Guide V4, Section 4
+# =============================================================================
+
+incose-req:Cat-Accuracy a incose-req:RuleCategory ;
+    rdfs:label "Accuracy" ;
+    incose-req:hasShortDescription "Rules ensuring accurate expression of needs and requirements (R1-R9)." .
+
+incose-req:Cat-Concision a incose-req:RuleCategory ;
+    rdfs:label "Concision" ;
+    incose-req:hasShortDescription "Rules ensuring concise expression (R10-R11)." .
+
+incose-req:Cat-NonAmbiguity a incose-req:RuleCategory ;
+    rdfs:label "Non-Ambiguity" ;
+    incose-req:hasShortDescription "Rules ensuring non-ambiguous expression (R12-R17)." .
+
+incose-req:Cat-Singularity a incose-req:RuleCategory ;
+    rdfs:label "Singularity" ;
+    incose-req:hasShortDescription "Rules ensuring each statement expresses a single thought (R18-R23)." .
+
+incose-req:Cat-Completeness a incose-req:RuleCategory ;
+    rdfs:label "Completeness" ;
+    incose-req:hasShortDescription "Rules ensuring complete expression of needs and requirements (R24-R25)." .
+
+incose-req:Cat-Realism a incose-req:RuleCategory ;
+    rdfs:label "Realism" ;
+    incose-req:hasShortDescription "Rules ensuring realistic, achievable statements (R26)." .
+
+incose-req:Cat-Conditions a incose-req:RuleCategory ;
+    rdfs:label "Conditions" ;
+    incose-req:hasShortDescription "Rules ensuring conditions are stated explicitly (R27-R28)." .
+
+incose-req:Cat-Uniqueness a incose-req:RuleCategory ;
+    rdfs:label "Uniqueness" ;
+    incose-req:hasShortDescription "Rules ensuring each requirement is unique and expressed once (R29-R30)." .
+
+incose-req:Cat-Abstraction a incose-req:RuleCategory ;
+    rdfs:label "Abstraction" ;
+    incose-req:hasShortDescription "Rules ensuring solution-free expression at the appropriate level (R31)." .
+
+incose-req:Cat-Quantifiers a incose-req:RuleCategory ;
+    rdfs:label "Quantifiers" ;
+    incose-req:hasShortDescription "Rules governing the use of universal quantifiers (R32)." .
+
+incose-req:Cat-Tolerance a incose-req:RuleCategory ;
+    rdfs:label "Tolerance" ;
+    incose-req:hasShortDescription "Rules ensuring quantities include appropriate ranges and tolerances (R33)." .
+
+incose-req:Cat-Quantification a incose-req:RuleCategory ;
+    rdfs:label "Quantification" ;
+    incose-req:hasShortDescription "Rules ensuring measurable and temporally precise statements (R34-R35)." .
+
+incose-req:Cat-UniformityOfLanguage a incose-req:RuleCategory ;
+    rdfs:label "Uniformity of Language" ;
+    incose-req:hasShortDescription "Rules ensuring consistent terminology and style (R36-R40)." .
+
+incose-req:Cat-Modularity a incose-req:RuleCategory ;
+    rdfs:label "Modularity" ;
+    incose-req:hasShortDescription "Rules ensuring modular organization of requirement sets (R41-R42)." .
+
+# =============================================================================
+# RULES (R1-R42)
+# INCOSE Guide V4, Section 4 + Appendix D (applicability) + Appendix E (xref)
+#
+# Cross-reference matrix: testsCharacteristic links derived from
+# Appendix E, p.137. Each X in the matrix becomes an assertion.
+# =============================================================================
+
+# --- 4.1 ACCURACY ---
+
+incose-req:R01 a incose-req:Rule ;
+    rdfs:label "Structured Statements" ;
+    incose-req:hasRuleId "R1" ;
+    incose-req:hasShortDescription "Need and requirement statements must conform to one of the agreed patterns, resulting in a well-structured complete statement." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C9-Conforming .
+
+incose-req:R02 a incose-req:Rule ;
+    rdfs:label "Active Voice" ;
+    incose-req:hasRuleId "R2" ;
+    incose-req:hasShortDescription "Use the active voice with the responsible entity clearly identified as the subject." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable .
+
+incose-req:R03 a incose-req:Rule ;
+    rdfs:label "Appropriate Subject-Verb" ;
+    incose-req:hasRuleId "R3" ;
+    incose-req:hasShortDescription "Ensure the subject and verb are appropriate to the entity to which the statement refers." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R04 a incose-req:Rule ;
+    rdfs:label "Defined Terms" ;
+    incose-req:hasRuleId "R4" ;
+    incose-req:hasShortDescription "Define all terms used within the statement in an associated glossary and/or data dictionary." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable ,
+        incose-req:C9-Conforming ,
+        incose-req:C11-Consistent ,
+        incose-req:C12-Feasible ,
+        incose-req:C13-Comprehensible ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R05 a incose-req:Rule ;
+    rdfs:label "Definite Articles" ;
+    incose-req:hasRuleId "R5" ;
+    incose-req:hasShortDescription "Use the definite article 'the' rather than the indefinite article 'a'." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+incose-req:R06 a incose-req:Rule ;
+    rdfs:label "Common Units of Measure" ;
+    incose-req:hasRuleId "R6" ;
+    incose-req:hasShortDescription "When stating quantities, use appropriate and consistent units of measure explicitly stated using a common measurement system." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct .
+
+incose-req:R07 a incose-req:Rule ;
+    rdfs:label "Vague Terms" ;
+    incose-req:hasRuleId "R7" ;
+    incose-req:hasShortDescription "Avoid the use of vague terms." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable .
+
+incose-req:R08 a incose-req:Rule ;
+    rdfs:label "Escape Clauses" ;
+    incose-req:hasRuleId "R8" ;
+    incose-req:hasShortDescription "Avoid the inclusion of escape clauses that state vague conditions or possibilities." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+incose-req:R09 a incose-req:Rule ;
+    rdfs:label "Open-Ended Clauses" ;
+    incose-req:hasRuleId "R9" ;
+    incose-req:hasShortDescription "Avoid open-ended, non-specific clauses such as 'including but not limited to', 'etc.' and 'and so on'." ;
+    incose-req:belongsToCategory incose-req:Cat-Accuracy ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C5-Singular ,
+        incose-req:C7-Verifiable .
+
+# --- 4.2 CONCISION ---
+
+incose-req:R10 a incose-req:Rule ;
+    rdfs:label "Superfluous Infinitives" ;
+    incose-req:hasRuleId "R10" ;
+    incose-req:hasShortDescription "Avoid the use of superfluous infinitives such as 'to be designed to', 'to be able to', 'to enable'." ;
+    incose-req:belongsToCategory incose-req:Cat-Concision ;
+    incose-req:hasApplicability incose-req:CR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+incose-req:R11 a incose-req:Rule ;
+    rdfs:label "Separate Clauses" ;
+    incose-req:hasRuleId "R11" ;
+    incose-req:hasShortDescription "Use a separate clause for each condition or qualification." ;
+    incose-req:belongsToCategory incose-req:Cat-Concision ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct .
+
+# --- 4.3 NON-AMBIGUITY ---
+
+incose-req:R12 a incose-req:Rule ;
+    rdfs:label "Correct Grammar" ;
+    incose-req:hasRuleId "R12" ;
+    incose-req:hasShortDescription "Use correct grammar." ;
+    incose-req:belongsToCategory incose-req:Cat-NonAmbiguity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C9-Conforming .
+
+incose-req:R13 a incose-req:Rule ;
+    rdfs:label "Correct Spelling" ;
+    incose-req:hasRuleId "R13" ;
+    incose-req:hasShortDescription "Use correct spelling." ;
+    incose-req:belongsToCategory incose-req:Cat-NonAmbiguity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+incose-req:R14 a incose-req:Rule ;
+    rdfs:label "Correct Punctuation" ;
+    incose-req:hasRuleId "R14" ;
+    incose-req:hasShortDescription "Use correct punctuation." ;
+    incose-req:belongsToCategory incose-req:Cat-NonAmbiguity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C8-Correct .
+
+incose-req:R15 a incose-req:Rule ;
+    rdfs:label "Logical Expressions" ;
+    incose-req:hasRuleId "R15" ;
+    incose-req:hasShortDescription "Use a defined convention to express logical expressions such as '[X AND Y]', '[X OR Y]', '[X XOR Y]', 'NOT [X OR Y]'." ;
+    incose-req:belongsToCategory incose-req:Cat-NonAmbiguity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+incose-req:R16 a incose-req:Rule ;
+    rdfs:label "Use of 'Not'" ;
+    incose-req:hasRuleId "R16" ;
+    incose-req:hasShortDescription "Avoid the use of the word 'not'." ;
+    incose-req:belongsToCategory incose-req:Cat-NonAmbiguity ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct .
+
+incose-req:R17 a incose-req:Rule ;
+    rdfs:label "Use of Oblique Symbol" ;
+    incose-req:hasRuleId "R17" ;
+    incose-req:hasShortDescription "Avoid the use of the oblique ('/') symbol except in units or fractions." ;
+    incose-req:belongsToCategory incose-req:Cat-NonAmbiguity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+# --- 4.4 SINGULARITY ---
+
+incose-req:R18 a incose-req:Rule ;
+    rdfs:label "Single Thought Sentence" ;
+    incose-req:hasRuleId "R18" ;
+    incose-req:hasShortDescription "Write a single sentence that contains a single thought conditioned and qualified by relevant sub-clauses." ;
+    incose-req:belongsToCategory incose-req:Cat-Singularity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R19 a incose-req:Rule ;
+    rdfs:label "Combinators" ;
+    incose-req:hasRuleId "R19" ;
+    incose-req:hasShortDescription "Avoid combinators that join clauses, such as 'and', 'or', 'then', 'unless', 'but', 'as well as', 'however', 'whether', 'whereas'." ;
+    incose-req:belongsToCategory incose-req:Cat-Singularity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C5-Singular .
+
+incose-req:R20 a incose-req:Rule ;
+    rdfs:label "Purpose Phrases" ;
+    incose-req:hasRuleId "R20" ;
+    incose-req:hasShortDescription "Avoid phrases indicating purpose: 'purpose of', 'intent of', or 'reason for'." ;
+    incose-req:belongsToCategory incose-req:Cat-Singularity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C1-Necessary ,
+        incose-req:C5-Singular .
+
+incose-req:R21 a incose-req:Rule ;
+    rdfs:label "Parentheses" ;
+    incose-req:hasRuleId "R21" ;
+    incose-req:hasShortDescription "Avoid parentheses and brackets containing subordinate text." ;
+    incose-req:belongsToCategory incose-req:Cat-Singularity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C5-Singular .
+
+incose-req:R22 a incose-req:Rule ;
+    rdfs:label "Enumeration" ;
+    incose-req:hasRuleId "R22" ;
+    incose-req:hasShortDescription "Enumerate sets explicitly instead of using a group noun to name the set." ;
+    incose-req:belongsToCategory incose-req:Cat-Singularity ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C5-Singular .
+
+incose-req:R23 a incose-req:Rule ;
+    rdfs:label "Supporting Diagram, Model, or ICD" ;
+    incose-req:hasRuleId "R23" ;
+    incose-req:hasShortDescription "When a need or requirement is related to complex behavior, refer to the supporting diagram, model, or ICD." ;
+    incose-req:belongsToCategory incose-req:Cat-Singularity ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete .
+
+# --- 4.5 COMPLETENESS ---
+
+incose-req:R24 a incose-req:Rule ;
+    rdfs:label "Pronouns" ;
+    incose-req:hasRuleId "R24" ;
+    incose-req:hasShortDescription "Avoid the use of personal and indefinite pronouns." ;
+    incose-req:belongsToCategory incose-req:Cat-Completeness ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable .
+
+incose-req:R25 a incose-req:Rule ;
+    rdfs:label "Headings" ;
+    incose-req:hasRuleId "R25" ;
+    incose-req:hasShortDescription "Avoid relying on headings to support explanation or understanding of the need or requirement." ;
+    incose-req:belongsToCategory incose-req:Cat-Completeness ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+# --- 4.6 REALISM ---
+
+incose-req:R26 a incose-req:Rule ;
+    rdfs:label "Absolutes" ;
+    incose-req:hasRuleId "R26" ;
+    incose-req:hasShortDescription "Avoid using unachievable absolutes." ;
+    incose-req:belongsToCategory incose-req:Cat-Realism ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C6-Feasible ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C14-AbleToBeValidated .
+
+# --- 4.7 CONDITIONS ---
+
+incose-req:R27 a incose-req:Rule ;
+    rdfs:label "Explicit Conditions" ;
+    incose-req:hasRuleId "R27" ;
+    incose-req:hasShortDescription "State conditions' applicability explicitly instead of leaving applicability to be inferred from context." ;
+    incose-req:belongsToCategory incose-req:Cat-Conditions ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct .
+
+incose-req:R28 a incose-req:Rule ;
+    rdfs:label "Multiple Conditions" ;
+    incose-req:hasRuleId "R28" ;
+    incose-req:hasShortDescription "Express the propositional nature of a condition explicitly for a single action instead of giving lists of actions for a specific condition." ;
+    incose-req:belongsToCategory incose-req:Cat-Conditions ;
+    incose-req:hasApplicability incose-req:CR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable .
+
+# --- 4.8 UNIQUENESS ---
+
+incose-req:R29 a incose-req:Rule ;
+    rdfs:label "Classification" ;
+    incose-req:hasRuleId "R29" ;
+    incose-req:hasShortDescription "Classify needs and requirements according to the aspects of the problem or system it addresses." ;
+    incose-req:belongsToCategory incose-req:Cat-Uniqueness ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C10-Complete ,
+        incose-req:C11-Consistent .
+
+incose-req:R30 a incose-req:Rule ;
+    rdfs:label "Unique Expression" ;
+    incose-req:hasRuleId "R30" ;
+    incose-req:hasShortDescription "Express each need and requirement once and only once." ;
+    incose-req:belongsToCategory incose-req:Cat-Uniqueness ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C1-Necessary ,
+        incose-req:C8-Correct ,
+        incose-req:C11-Consistent .
+
+# --- 4.9 ABSTRACTION ---
+
+incose-req:R31 a incose-req:Rule ;
+    rdfs:label "Solution Free" ;
+    incose-req:hasRuleId "R31" ;
+    incose-req:hasShortDescription "Avoid stating implementation in a need or requirement statement unless there is rationale for constraining the design." ;
+    incose-req:belongsToCategory incose-req:Cat-Abstraction ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C2-Appropriate .
+
+# --- 4.10 QUANTIFIERS ---
+
+incose-req:R32 a incose-req:Rule ;
+    rdfs:label "Universal Qualification" ;
+    incose-req:hasRuleId "R32" ;
+    incose-req:hasShortDescription "Use 'each' instead of 'all', 'any' or 'both' when universal quantification is intended." ;
+    incose-req:belongsToCategory incose-req:Cat-Quantifiers ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct .
+
+# --- 4.11 TOLERANCE ---
+
+incose-req:R33 a incose-req:Rule ;
+    rdfs:label "Range of Values" ;
+    incose-req:hasRuleId "R33" ;
+    incose-req:hasShortDescription "Define each quantity with a range of values appropriate to the entity to which it applies and against which it will be verified or validated." ;
+    incose-req:belongsToCategory incose-req:Cat-Tolerance ;
+    incose-req:hasApplicability incose-req:CR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C6-Feasible ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C14-AbleToBeValidated .
+
+# --- 4.12 QUANTIFICATION ---
+
+incose-req:R34 a incose-req:Rule ;
+    rdfs:label "Measurable Performance" ;
+    incose-req:hasRuleId "R34" ;
+    incose-req:hasShortDescription "Provide specific measurable performance targets appropriate to the entity." ;
+    incose-req:belongsToCategory incose-req:Cat-Quantification ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R35 a incose-req:Rule ;
+    rdfs:label "Temporal Dependencies" ;
+    incose-req:hasRuleId "R35" ;
+    incose-req:hasShortDescription "Define temporal dependencies explicitly instead of using indefinite temporal keywords." ;
+    incose-req:belongsToCategory incose-req:Cat-Quantification ;
+    incose-req:hasApplicability incose-req:RNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable .
+
+# --- 4.13 UNIFORMITY OF LANGUAGE ---
+
+incose-req:R36 a incose-req:Rule ;
+    rdfs:label "Consistent Terms and Units" ;
+    incose-req:hasRuleId "R36" ;
+    incose-req:hasShortDescription "Ensure each term and unit of measure is used consistently throughout the requirement set and associated models." ;
+    incose-req:belongsToCategory incose-req:Cat-UniformityOfLanguage ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C10-Complete ,
+        incose-req:C12-Feasible ,
+        incose-req:C13-Comprehensible ,
+        incose-req:C14-AbleToBeValidated ,
+        incose-req:C15-Correct .
+
+incose-req:R37 a incose-req:Rule ;
+    rdfs:label "Acronyms" ;
+    incose-req:hasRuleId "R37" ;
+    incose-req:hasShortDescription "If acronyms are used, they must be consistent throughout the requirement set and associated models." ;
+    incose-req:belongsToCategory incose-req:Cat-UniformityOfLanguage ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable ,
+        incose-req:C10-Complete ,
+        incose-req:C12-Feasible ,
+        incose-req:C13-Comprehensible ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R38 a incose-req:Rule ;
+    rdfs:label "Abbreviations" ;
+    incose-req:hasRuleId "R38" ;
+    incose-req:hasShortDescription "Avoid the use of abbreviations in need and requirement statements as well as associated models and other SE lifecycle artefacts." ;
+    incose-req:belongsToCategory incose-req:Cat-UniformityOfLanguage ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C7-Verifiable ,
+        incose-req:C10-Complete ,
+        incose-req:C12-Feasible ,
+        incose-req:C13-Comprehensible ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R39 a incose-req:Rule ;
+    rdfs:label "Style Guide" ;
+    incose-req:hasRuleId "R39" ;
+    incose-req:hasShortDescription "Use a project-wide style guide for individual need and requirement statements." ;
+    incose-req:belongsToCategory incose-req:Cat-UniformityOfLanguage ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary true ;
+    incose-req:testsCharacteristic
+        incose-req:C3-Unambiguous ,
+        incose-req:C4-Complete ,
+        incose-req:C5-Singular ,
+        incose-req:C7-Verifiable ,
+        incose-req:C10-Complete ,
+        incose-req:C12-Feasible ,
+        incose-req:C13-Comprehensible ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R40 a incose-req:Rule ;
+    rdfs:label "Decimal Format" ;
+    incose-req:hasRuleId "R40" ;
+    incose-req:hasShortDescription "Use a consistent format and number of signification digits for the specification of decimal numbers." ;
+    incose-req:belongsToCategory incose-req:Cat-UniformityOfLanguage ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C1-Necessary ,
+        incose-req:C3-Unambiguous ,
+        incose-req:C7-Verifiable ,
+        incose-req:C10-Complete .
+
+# --- 4.14 MODULARITY ---
+
+incose-req:R41 a incose-req:Rule ;
+    rdfs:label "Related Needs and Requirements" ;
+    incose-req:hasRuleId "R41" ;
+    incose-req:hasShortDescription "Group related needs and requirements together." ;
+    incose-req:belongsToCategory incose-req:Cat-Modularity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C4-Complete ,
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C9-Conforming ,
+        incose-req:C10-Complete ,
+        incose-req:C14-AbleToBeValidated .
+
+incose-req:R42 a incose-req:Rule ;
+    rdfs:label "Structured Sets" ;
+    incose-req:hasRuleId "R42" ;
+    incose-req:hasShortDescription "Conform to a defined structure or template for organizing sets of needs and requirements." ;
+    incose-req:belongsToCategory incose-req:Cat-Modularity ;
+    incose-req:hasApplicability incose-req:CNCR ;
+    incose-req:requiresProjectDictionary false ;
+    incose-req:testsCharacteristic
+        incose-req:C7-Verifiable ,
+        incose-req:C8-Correct ,
+        incose-req:C10-Complete ,
+        incose-req:C11-Consistent ,
+        incose-req:C12-Feasible ,
+        incose-req:C13-Comprehensible ,
+        incose-req:C14-AbleToBeValidated .
