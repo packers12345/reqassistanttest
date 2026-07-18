@@ -93,15 +93,36 @@ def analyze_set(requirements, context, glossary, programmatic_findings, api_key)
     prompt = create_set_analysis_prompt(requirements, context, glossary, programmatic_findings)
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=3000,
+        # Kept in step with ai_analyzer._call_ai — the previous pinned snapshot
+        # (claude-sonnet-4-20250514) no longer resolves and 404s.
+        model="claude-sonnet-4-5",
+        # Set-level analysis covers every requirement at once, so the response
+        # is far larger than a single-requirement evaluation. At 3000 it was
+        # truncated mid-object and the JSON parse below failed.
+        max_tokens=16000,
         temperature=0.3,
         messages=[{"role": "user", "content": prompt}],
     )
 
-    response_text = message.content[0].text.strip()
-    if response_text.startswith("```"):
-        lines = response_text.split("\n")
-        response_text = "\n".join(lines[1:-1])
+    if message.stop_reason == "max_tokens":
+        raise ValueError(
+            "Set analysis response was truncated at max_tokens. Reduce the "
+            "number of requirements analysed together, or raise max_tokens."
+        )
 
-    return json.loads(response_text)
+    response_text = message.content[0].text.strip()
+
+    # Strip a ```json fence if one is present, without assuming the closing
+    # fence is the final line.
+    if response_text.startswith("```"):
+        response_text = response_text.split("\n", 1)[1] if "\n" in response_text else ""
+        if "```" in response_text:
+            response_text = response_text.rsplit("```", 1)[0]
+        response_text = response_text.strip()
+
+    try:
+        return json.loads(response_text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"Set analysis returned text that is not valid JSON: {exc}"
+        ) from exc

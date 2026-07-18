@@ -54,59 +54,40 @@ export default function RequirementCard({ requirement, feedbackState, onFeedback
   }, [requirement, feedbackState, violated])
 
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #e5e7eb',
-      borderRadius: 8,
-      padding: '18px 20px',
-      marginBottom: 20,
-      boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-    }}>
+    <div className="req-card">
       {/* Requirement header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>{requirement.req_id}</h3>
-        <div style={{ display: 'flex', gap: 8, fontSize: 12, fontWeight: 600 }}>
-          <span style={{ color: '#dc3545' }}>{violated.length} violated</span>
-          <span style={{ color: '#6b7280' }}>·</span>
-          <span style={{ color: '#16a34a' }}>{satisfied.length} satisfied</span>
+      <div className="req-card-header">
+        <h3>{requirement.req_id}</h3>
+        <div className="req-stats">
+          <span className="req-stat-violated">{violated.length} violated</span>
+          <span className="req-stat-sep">·</span>
+          <span className="req-stat-satisfied">{satisfied.length} satisfied</span>
           {violated.length > 0 && (
             <>
-              <span style={{ color: '#6b7280' }}>·</span>
-              <span style={{ color: '#6b7280' }}>{decidedCount}/{violated.length} reviewed</span>
+              <span className="req-stat-sep">·</span>
+              <span className="req-stat-meta">{decidedCount}/{violated.length} reviewed</span>
             </>
           )}
         </div>
       </div>
 
       {/* Original text */}
-      <div style={{
-        background: '#f9fafb', borderRadius: 5,
-        padding: '8px 12px', marginBottom: 14,
-        fontSize: 14, lineHeight: 1.6, color: '#374151',
-        borderLeft: '3px solid #9ca3af',
-      }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 3 }}>ORIGINAL</span>
+      <div className="req-text-block original">
+        <span className="eyebrow">Original</span>
         {requirement.original_text}
       </div>
 
       {/* Full preview (shown when at least one decision made) */}
       {fullPreview && (
-        <div style={{
-          background: '#eff6ff', borderRadius: 5,
-          padding: '8px 12px', marginBottom: 14,
-          fontSize: 14, lineHeight: 1.6, color: '#1e40af',
-          borderLeft: '3px solid #3b82f6',
-        }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#1d4ed8', display: 'block', marginBottom: 3 }}>
-            COMBINED PREVIEW
-          </span>
+        <div className="req-text-block preview">
+          <span className="eyebrow">Combined preview</span>
           {fullPreview}
         </div>
       )}
 
       {/* Criterion cards */}
       {evals.length === 0 ? (
-        <p style={{ color: '#6b7280', fontStyle: 'italic', fontSize: 13 }}>
+        <p className="req-empty">
           {requirement.error ? `Analysis error: ${requirement.error}` : 'No evaluations available.'}
         </p>
       ) : (

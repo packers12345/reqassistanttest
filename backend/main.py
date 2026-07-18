@@ -5,6 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List
 import uuid
 import os
+import secrets
+import time
+from collections import defaultdict
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -77,6 +80,150 @@ app.add_middleware(
 
 BASE_DIR = Path(__file__).parent.parent
 FRONTEND_DIST = BASE_DIR / 'frontend' / 'dist'
+
+# Providers the app can serve, and the env var holding each one's key. Keys are
+# supplied by the operator (backend/.env locally, Render dashboard in
+# production) — never by the end user, who never sees or enters a key.
+PROVIDER_ENV_KEYS = {
+    'anthropic': 'ANTHROPIC_API_KEY',
+    'openai': 'OPENAI_API_KEY',
+}
+
+PROVIDER_LABELS = {
+    'anthropic': 'Claude (Anthropic)',
+    'openai': 'GPT-4o (OpenAI)',
+}
+
+
+def _server_api_key(provider: str) -> str:
+    """Return the operator-configured key for a provider, or '' if unset."""
+    env_var = PROVIDER_ENV_KEYS.get(provider)
+    return os.getenv(env_var, '').strip() if env_var else ''
+
+
+def _available_providers() -> list:
+    """Providers that currently have a key configured on the server."""
+    return [p for p in PROVIDER_ENV_KEYS if _server_api_key(p)]
+
+
+# ===========================================================
+# Shared access code
+# ===========================================================
+# Analysis runs on the operator's API keys, so an open public URL would let
+# anyone spend those credits. ACCESS_CODE gates the API behind a single shared
+# secret handed out to intended users (including invited reviewers).
+#
+# If ACCESS_CODE is unset the API is open — convenient for local development,
+# but a deployment without it is unprotected, hence the startup warning below.
+
+# Paths that must stay reachable without a code: the config probe the gate
+# itself depends on, and the code-verification endpoint.
+_OPEN_API_PATHS = {'/api', '/api/config', '/api/access/verify'}
+
+# Per-IP failed-attempt tracking, so a short shared code can't be brute forced.
+_MAX_FAILED_ATTEMPTS = 10
+_LOCKOUT_WINDOW_SECONDS = 15 * 60
+_failed_attempts = defaultdict(list)
+
+
+def _get_access_code() -> str:
+    return os.getenv('ACCESS_CODE', '').strip()
+
+
+def _client_ip(request: Request) -> str:
+    # Render terminates TLS at its proxy, so the real client IP arrives in
+    # X-Forwarded-For as "client, proxy1, proxy2".
+    forwarded = request.headers.get('x-forwarded-for', '')
+    if forwarded:
+        return forwarded.split(',')[0].strip()
+    return request.client.host if request.client else 'unknown'
+
+
+def _is_locked_out(ip: str) -> bool:
+    cutoff = time.time() - _LOCKOUT_WINDOW_SECONDS
+    recent = [t for t in _failed_attempts[ip] if t > cutoff]
+    _failed_attempts[ip] = recent
+    return len(recent) >= _MAX_FAILED_ATTEMPTS
+
+
+def _record_failure(ip: str) -> None:
+    _failed_attempts[ip].append(time.time())
+
+
+def _code_matches(supplied: str) -> bool:
+    """Constant-time comparison, so timing never leaks the code."""
+    expected = _get_access_code()
+    if not expected:
+        return True
+    return secrets.compare_digest(supplied.strip(), expected)
+
+
+@app.middleware("http")
+async def require_access_code(request: Request, call_next):
+    """Gate every /api route behind the shared code, when one is configured."""
+    path = request.url.path
+
+    if not path.startswith('/api') or path in _OPEN_API_PATHS:
+        return await call_next(request)
+
+    # CORS preflight carries no custom headers — let the browser through.
+    if request.method == 'OPTIONS':
+        return await call_next(request)
+
+    if not _get_access_code():
+        return await call_next(request)
+
+    ip = _client_ip(request)
+    if _is_locked_out(ip):
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Too many failed attempts. Try again in 15 minutes."},
+        )
+
+    supplied = request.headers.get('X-Access-Code', '')
+    if not _code_matches(supplied):
+        _record_failure(ip)
+        return JSONResponse(
+            status_code=401,
+            content={"detail": "A valid access code is required."},
+        )
+
+    return await call_next(request)
+
+
+@app.post("/api/access/verify")
+async def verify_access_code(request: Request, payload: dict):
+    """Check a code without performing any work, so the UI can gate up front."""
+    if not _get_access_code():
+        return {"ok": True, "required": False}
+
+    ip = _client_ip(request)
+    if _is_locked_out(ip):
+        raise HTTPException(
+            status_code=429,
+            detail="Too many failed attempts. Try again in 15 minutes.",
+        )
+
+    if _code_matches(payload.get('code', '')):
+        return {"ok": True, "required": True}
+
+    _record_failure(ip)
+    raise HTTPException(status_code=401, detail="Incorrect access code.")
+
+
+@app.on_event("startup")
+async def _warn_if_unprotected():
+    if not _get_access_code():
+        print(
+            "WARNING: ACCESS_CODE is not set — the API is open to anyone who "
+            "reaches this URL, and analysis runs on your API keys."
+        )
+    if not _available_providers():
+        print(
+            "WARNING: no AI provider key configured — set ANTHROPIC_API_KEY "
+            "and/or OPENAI_API_KEY. Analysis requests will fail until you do."
+        )
+
 # Note: no uploads/outputs directories — all session data is kept in memory only
 # (see feedback_storage.py). Nothing the user uploads or generates is written to disk.
 
@@ -96,24 +243,27 @@ def read_root():
 
 @app.get("/api/config")
 def get_config():
-    """Expose active AI provider to the frontend (never exposes keys)."""
+    """Tell the frontend which providers this deployment can use.
+
+    Never exposes keys — only whether each one is configured, so the UI can
+    offer the working providers and hide the rest.
+    """
     from ai_analyzer import get_provider
+    available = _available_providers()
+    # Default to the configured AI_PROVIDER when it is usable, else whichever
+    # provider actually has a key, so the UI never opens on a dead option.
     provider = get_provider()
-    model_label = {
-        "anthropic": "Claude (Anthropic)",
-        "openai": "GPT-4o (OpenAI)",
-        "ollama": f"Ollama / {os.getenv('OLLAMA_MODEL', 'llama3')}",
-    }.get(provider, provider)
-    # Report key status per provider so the frontend can show the green banner
-    # for any provider that has a key in .env, regardless of which is active
+    if provider not in available:
+        provider = available[0] if available else provider
+
     return {
         "provider": provider,
-        "model_label": model_label,
-        "has_key": bool(os.getenv('ANTHROPIC_API_KEY', '').strip()) if provider == 'anthropic' else bool(os.getenv('OPENAI_API_KEY', '').strip()),
-        "keys": {
-            "anthropic": bool(os.getenv('ANTHROPIC_API_KEY', '').strip()),
-            "openai": bool(os.getenv('OPENAI_API_KEY', '').strip()),
-        },
+        "model_label": PROVIDER_LABELS.get(provider, provider),
+        "providers": [
+            {"value": p, "label": PROVIDER_LABELS.get(p, p)} for p in available
+        ],
+        "ready": bool(available),
+        "auth_required": bool(_get_access_code()),
     }
 
 
@@ -124,22 +274,26 @@ async def upload_files(
     context_file: Optional[UploadFile] = File(None),
 ):
     """Upload requirements and optional context files, start analysis."""
-    # Provider and key come from the UI headers; fall back to .env values.
-    api_key  = request.headers.get('X-API-Key', '').strip()
+    # The client may pick which provider to use, but never supplies a key —
+    # keys come only from the server environment. Any X-API-Key header is
+    # ignored so a caller can't bill an arbitrary key through this deployment.
     provider = request.headers.get('X-AI-Provider', '').strip().lower() or os.getenv('AI_PROVIDER', 'anthropic')
 
-    if not api_key:
-        # Try .env fallback keys
-        if provider == 'openai':
-            api_key = os.getenv('OPENAI_API_KEY', '').strip()
-        else:
-            api_key = os.getenv('ANTHROPIC_API_KEY', '').strip()
+    if provider not in PROVIDER_ENV_KEYS:
+        raise HTTPException(status_code=400, detail=f"Unsupported AI provider '{provider}'.")
 
+    api_key = _server_api_key(provider)
     if not api_key:
-        raise HTTPException(status_code=400, detail=f"No API key provided for provider '{provider}'.")
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"{PROVIDER_LABELS[provider]} is not configured on this server. "
+                f"Set {PROVIDER_ENV_KEYS[provider]} in the deployment environment."
+            ),
+        )
 
     # Key and provider stay request-scoped (passed straight to the analyzer) so
-    # concurrent users on the public URL never clobber each other's credentials.
+    # concurrent requests never clobber each other's configuration.
 
     session_id = str(uuid.uuid4())[:8]
 
@@ -546,7 +700,7 @@ def knowledge_reset():
 # ===========================================================
 
 @app.post("/api/set-analysis/{session_id}")
-async def run_set_analysis(session_id: str, x_api_key: str = Header(None)):
+async def run_set_analysis(session_id: str):
     """Run set-level analysis on an existing session's requirements."""
     try:
         analysis = load_analysis(session_id)
@@ -558,15 +712,26 @@ async def run_set_analysis(session_id: str, x_api_key: str = Header(None)):
         raise HTTPException(status_code=400, detail="No requirements found in analysis")
 
     analyzer = _get_set_analyzer()
-    programmatic_report = analyzer.generate_set_report(requirements, analysis)
+
+    # SetAnalyzer works on the parser's shape ({id, text}), but a stored
+    # analysis uses {req_id, original_text}. Translate at the boundary rather
+    # than teaching the analyzer about both.
+    set_requirements = [
+        {'id': r.get('req_id', ''), 'text': r.get('original_text', '')}
+        for r in requirements
+    ]
+    programmatic_report = analyzer.generate_set_report(set_requirements, analysis)
 
     combined = dict(programmatic_report)
 
-    if x_api_key:
+    # Set-level semantic analysis is Anthropic-only. Run it when the server has
+    # an Anthropic key; otherwise fall back to the programmatic report alone.
+    anthropic_key = _server_api_key('anthropic')
+    if anthropic_key:
         context = analysis.get('context', '')
         glossary = programmatic_report.get('glossary', {})
         claude_analysis = analyze_set(
-            requirements, context, glossary, programmatic_report, x_api_key
+            set_requirements, context, glossary, programmatic_report, anthropic_key
         )
         combined['semantic_analysis'] = claude_analysis
 

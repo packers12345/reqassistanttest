@@ -11,3 +11,17 @@ services:
         value: "3.12"
       - key: NODE_VERSION
         value: "20"
+      # Which provider the app defaults to. Must be one the keys below cover.
+      - key: AI_PROVIDER
+        value: anthropic
+      # Set these in the Render dashboard (Environment tab) — sync: false keeps
+      # the secret out of the repo while still requiring it at deploy time.
+      # End users never enter a key; all analysis runs on these.
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      # Shared code required to use the app. Without it the URL is open to
+      # anyone who finds it, spending the keys above. Also set in the dashboard.
+      - key: ACCESS_CODE
+        sync: false

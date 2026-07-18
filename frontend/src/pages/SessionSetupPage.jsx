@@ -74,11 +74,9 @@ export default function SessionSetupPage() {
     }
   }
 
-  const roleColors = { lead: '#2563eb', senior: '#ea580c', junior: '#6b7280' }
-
   return (
     <div className="upload-page">
-      <div className="upload-card" style={{ maxWidth: 640 }}>
+      <div className="upload-card wide">
         <h2>Multi-Reviewer Setup</h2>
         <p className="subtitle">Session: {sessionId}</p>
 
@@ -92,35 +90,22 @@ export default function SessionSetupPage() {
               with {sessionConfig.expected_reviewers.length} reviewers assigned.
             </div>
 
-            <h3 style={{ marginTop: 16, marginBottom: 8 }}>Review Links</h3>
-            <p className="hint" style={{ marginBottom: 12 }}>Share these links with each reviewer:</p>
+            <h3 className="section-heading">Review Links</h3>
+            <p className="hint">Share these links with each reviewer:</p>
 
             {sessionConfig.expected_reviewers.map(rid => {
               const reviewer = reviewers.find(r => r.reviewer_id === rid)
               const submitted = (sessionConfig.submitted_reviewers || []).includes(rid)
               return (
-                <div key={rid} style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '8px 12px', marginBottom: 6,
-                  background: submitted ? '#f0fdf4' : '#f9fafb',
-                  borderRadius: 6, border: `1px solid ${submitted ? '#bbf7d0' : '#e5e7eb'}`
-                }}>
-                  <span style={{
-                    background: roleColors[reviewer?.role] || '#666',
-                    color: 'white', padding: '1px 8px', borderRadius: 4, fontSize: '0.7rem', fontWeight: 700
-                  }}>
+                <div key={rid} className={`list-row${submitted ? ' complete' : ''}`}>
+                  <span className={`role-badge ${reviewer?.role || 'junior'}`}>
                     {reviewer?.role || 'reviewer'}
                   </span>
-                  <span style={{ flex: 1, fontWeight: 500 }}>
-                    {reviewer?.name || rid}
-                  </span>
+                  <span className="list-row-name">{reviewer?.name || rid}</span>
                   {submitted ? (
-                    <span style={{ color: '#16a34a', fontSize: '0.8rem', fontWeight: 600 }}>Submitted</span>
+                    <span className="list-row-status">Submitted</span>
                   ) : (
-                    <Link
-                      to={`/review/${sessionId}?reviewer=${rid}`}
-                      style={{ fontSize: '0.8rem', color: '#2563eb' }}
-                    >
+                    <Link className="list-row-link" to={`/review/${sessionId}?reviewer=${rid}`}>
                       /review/{sessionId}?reviewer={rid}
                     </Link>
                   )}
@@ -129,7 +114,7 @@ export default function SessionSetupPage() {
             })}
 
             {sessionConfig.status === 'ready_for_resolution' && (
-              <div style={{ marginTop: 16 }}>
+              <div className="section-block">
                 <Link to={`/consensus/${sessionId}`}>
                   <button className="btn-primary">View Consensus Dashboard</button>
                 </Link>
@@ -137,7 +122,7 @@ export default function SessionSetupPage() {
             )}
 
             {sessionConfig.status === 'reviewing' && (
-              <p className="hint" style={{ marginTop: 12 }}>
+              <p className="hint">
                 Waiting for {sessionConfig.expected_reviewers.length - (sessionConfig.submitted_reviewers || []).length} reviewer(s) to submit.
               </p>
             )}
@@ -145,61 +130,60 @@ export default function SessionSetupPage() {
         ) : (
           <>
             {/* Add new reviewer */}
-            <div style={{ marginBottom: 20 }}>
-              <h3 style={{ marginBottom: 8 }}>Add Reviewer</h3>
-              <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+            <div className="section-block">
+              <h3 className="section-heading">Add Reviewer</h3>
+              <div className="field-row">
                 <input
                   type="text"
+                  className="text-input"
                   placeholder="Name"
+                  aria-label="Reviewer name"
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
-                  style={{ flex: 1, padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: '0.9rem' }}
                   onKeyDown={e => e.key === 'Enter' && handleAddReviewer()}
                 />
                 <select
+                  className="select-input"
+                  aria-label="Reviewer role"
                   value={newRole}
                   onChange={e => setNewRole(e.target.value)}
-                  style={{ padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: '0.9rem' }}
                 >
                   <option value="lead">Lead (weight 3)</option>
                   <option value="senior">Senior (weight 2)</option>
                   <option value="junior">Junior (weight 1)</option>
                 </select>
-                <button className="btn-secondary" style={{ width: 'auto', padding: '8px 16px' }} onClick={handleAddReviewer}>
+                <button className="btn-secondary btn-inline" onClick={handleAddReviewer}>
                   Add
                 </button>
               </div>
             </div>
 
             {/* Select reviewers */}
-            <div style={{ marginBottom: 20 }}>
-              <h3 style={{ marginBottom: 8 }}>Select Reviewers ({selectedReviewers.length} selected)</h3>
+            <div className="section-block">
+              <h3 className="section-heading">
+                Select Reviewers ({selectedReviewers.length} selected)
+              </h3>
               {reviewers.length === 0 ? (
                 <p className="hint">No reviewers registered yet. Add some above.</p>
               ) : (
-                reviewers.map(r => (
-                  <label key={r.reviewer_id} style={{
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    padding: '8px 12px', marginBottom: 4,
-                    background: selectedReviewers.includes(r.reviewer_id) ? '#eff6ff' : '#f9fafb',
-                    borderRadius: 6, cursor: 'pointer',
-                    border: `1px solid ${selectedReviewers.includes(r.reviewer_id) ? '#bfdbfe' : '#e5e7eb'}`
-                  }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedReviewers.includes(r.reviewer_id)}
-                      onChange={() => toggleReviewer(r.reviewer_id)}
-                    />
-                    <span style={{
-                      background: roleColors[r.role] || '#666',
-                      color: 'white', padding: '1px 8px', borderRadius: 4, fontSize: '0.7rem', fontWeight: 700
-                    }}>
-                      {r.role}
-                    </span>
-                    <span style={{ fontWeight: 500 }}>{r.name}</span>
-                    <span style={{ color: '#888', fontSize: '0.8rem' }}>weight {r.weight}</span>
-                  </label>
-                ))
+                reviewers.map(r => {
+                  const isSelected = selectedReviewers.includes(r.reviewer_id)
+                  return (
+                    <label
+                      key={r.reviewer_id}
+                      className={`list-row selectable${isSelected ? ' selected' : ''}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleReviewer(r.reviewer_id)}
+                      />
+                      <span className={`role-badge ${r.role}`}>{r.role}</span>
+                      <span className="list-row-name">{r.name}</span>
+                      <span className="list-row-meta">weight {r.weight}</span>
+                    </label>
+                  )
+                })
               )}
             </div>
 

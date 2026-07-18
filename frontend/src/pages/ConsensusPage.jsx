@@ -81,13 +81,6 @@ export default function ConsensusPage() {
   if (loading) return <div className="loading">Loading consensus data...</div>
   if (error && !consensus) return <div className="error-page"><div className="error-msg">{error}</div></div>
 
-  const agreementColors = {
-    unanimous: '#16a34a',
-    majority: '#ea580c',
-    conflict: '#dc2626',
-    pending: '#6b7280'
-  }
-
   const agreementLabels = {
     unanimous: 'Unanimous',
     majority: 'Majority',
@@ -115,8 +108,8 @@ export default function ConsensusPage() {
       {error && <div className="error-msg">{error}</div>}
 
       {/* Status summary */}
-      <div className="feedback-controls" style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+      <div className="feedback-controls section-block">
+        <div className="stat-row">
           <div className="stat-box">
             <span className="stat-number">{consensus?.submitted_reviewers?.length || 0}</span>
             <span className="stat-label">Submitted</span>
@@ -125,19 +118,19 @@ export default function ConsensusPage() {
             <span className="stat-number">{consensus?.pending_reviewers?.length || 0}</span>
             <span className="stat-label">Pending</span>
           </div>
-          <div className="stat-box" style={{ borderBottom: '3px solid #16a34a' }}>
+          <div className="stat-box accent-unanimous">
             <span className="stat-number">
               {consensus?.violations?.filter(v => v.agreement === 'unanimous').length || 0}
             </span>
             <span className="stat-label">Unanimous</span>
           </div>
-          <div className="stat-box" style={{ borderBottom: '3px solid #ea580c' }}>
+          <div className="stat-box accent-majority">
             <span className="stat-number">
               {consensus?.violations?.filter(v => v.agreement === 'majority').length || 0}
             </span>
             <span className="stat-label">Majority</span>
           </div>
-          <div className="stat-box" style={{ borderBottom: '3px solid #dc2626' }}>
+          <div className="stat-box accent-conflict">
             <span className="stat-number">
               {consensus?.violations?.filter(v => v.agreement === 'conflict').length || 0}
             </span>
@@ -156,27 +149,20 @@ export default function ConsensusPage() {
         return (
           <div
             key={violation.violation_id}
-            className="requirement-card"
-            style={{
-              borderLeft: `4px solid ${agreementColors[violation.agreement] || '#ccc'}`
-            }}
+            className={`requirement-card consensus-card ${violation.agreement || 'pending'}`}
           >
             {/* Header */}
             <div className="violation-header">
               <span className="rule-badge">{violation.rule_id}</span>
               <span className="rule-name">Req {violation.req_id}</span>
-              <span style={{
-                background: agreementColors[violation.agreement] || '#ccc',
-                color: 'white', padding: '1px 10px', borderRadius: 10,
-                fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase'
-              }}>
+              <span className={`agreement-badge ${violation.agreement || 'pending'}`}>
                 {agreementLabels[violation.agreement] || violation.agreement}
               </span>
             </div>
 
             {/* Context */}
             {vInfo.original_text && (
-              <div className="req-original" style={{ marginBottom: 12 }}>
+              <div className="req-original section-block">
                 <label>Requirement</label>
                 <p>{vInfo.original_text}</p>
               </div>
@@ -196,59 +182,38 @@ export default function ConsensusPage() {
             )}
 
             {/* Votes from each reviewer */}
-            <div style={{ marginTop: 12 }}>
-              <label style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Reviewer Votes
-              </label>
+            <div className="vote-list">
+              <span className="eyebrow">Reviewer Votes</span>
               {violation.votes.map(vote => (
-                <div key={vote.reviewer_id} style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '6px 10px', marginTop: 4,
-                  background: '#f9fafb', borderRadius: 4, fontSize: '0.85rem'
-                }}>
-                  <span style={{
-                    background: vote.reviewer_role === 'lead' ? '#2563eb' : vote.reviewer_role === 'senior' ? '#ea580c' : '#6b7280',
-                    color: 'white', padding: '1px 6px', borderRadius: 4, fontSize: '0.65rem', fontWeight: 700
-                  }}>
+                <div key={vote.reviewer_id} className="vote-row">
+                  <span className={`role-badge ${vote.reviewer_role || 'junior'}`}>
                     {vote.reviewer_role}
                   </span>
-                  <span style={{ fontWeight: 500, minWidth: 100 }}>{vote.reviewer_name}</span>
+                  <span className="vote-name">{vote.reviewer_name}</span>
                   <span className={`action-badge ${vote.action}`}>
                     {vote.action}
                   </span>
                   {vote.action !== 'reject' && vote.text && (
-                    <span style={{ color: '#16a34a', fontSize: '0.8rem' }}>"{vote.text}"</span>
+                    <span className="vote-text">"{vote.text}"</span>
                   )}
-                  {vote.notes && (
-                    <span style={{ color: '#888', fontSize: '0.8rem', fontStyle: 'italic' }}>
-                      {vote.notes}
-                    </span>
-                  )}
-                  <span style={{ color: '#aaa', fontSize: '0.75rem', marginLeft: 'auto' }}>
-                    wt: {vote.weight}
-                  </span>
+                  {vote.notes && <span className="vote-notes">{vote.notes}</span>}
+                  <span className="vote-weight">wt: {vote.weight}</span>
                 </div>
               ))}
             </div>
 
             {/* Show resolved result if available */}
             {resolvedViol && (
-              <div style={{
-                marginTop: 12, padding: '8px 12px', borderRadius: 4,
-                background: resolvedViol.conflict ? '#fef2f2' : '#f0fdf4',
-                border: `1px solid ${resolvedViol.conflict ? '#fecaca' : '#bbf7d0'}`
-              }}>
-                <div style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div className={`resolution-box${resolvedViol.conflict ? ' conflict' : ''}`}>
+                <div className="resolution-meta">
                   Resolution: {resolvedViol.resolution_method} (confidence: {resolvedViol.confidence})
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div className="resolution-result">
                   <span className={`action-badge ${resolvedViol.resolved_action}`}>
                     {resolvedViol.resolved_action}
                   </span>
                   {resolvedViol.resolved_action !== 'reject' && (
-                    <span style={{ color: '#16a34a', fontWeight: 500 }}>
-                      "{resolvedViol.resolved_text}"
-                    </span>
+                    <span className="resolution-text">"{resolvedViol.resolved_text}"</span>
                   )}
                 </div>
               </div>
@@ -256,7 +221,7 @@ export default function ConsensusPage() {
 
             {/* Override button for conflicts */}
             {violation.agreement === 'conflict' && !resolvedViol && (
-              <p style={{ marginTop: 8, fontSize: '0.8rem', color: '#dc2626' }}>
+              <p className="conflict-note">
                 This violation needs lead reviewer attention after resolution.
               </p>
             )}
@@ -265,7 +230,7 @@ export default function ConsensusPage() {
       })}
 
       {/* Action buttons */}
-      <div className="feedback-controls" style={{ marginTop: 20 }}>
+      <div className="feedback-controls">
         {!resolved ? (
           <button
             className="btn-primary"
@@ -281,18 +246,15 @@ export default function ConsensusPage() {
           </button>
         ) : (
           <div>
-            <div className="progress-msg" style={{ marginBottom: 12 }}>
+            <div className="progress-msg">
               Resolution complete. {resolved.summary_statistics?.conflicts || 0} conflict(s) found.
             </div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                className="btn-primary"
-                style={{ flex: 1 }}
-                onClick={() => navigate(`/download/${sessionId}`)}
-              >
-                View Results & Download
-              </button>
-            </div>
+            <button
+              className="btn-primary"
+              onClick={() => navigate(`/download/${sessionId}`)}
+            >
+              View Results &amp; Download
+            </button>
           </div>
         )}
       </div>

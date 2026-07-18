@@ -175,9 +175,9 @@ export default function ReviewPage() {
   if (submitted && reviewerId) {
     return (
       <div className="upload-page">
-        <div className="upload-card" style={{ textAlign: 'center' }}>
+        <div className="upload-card centered">
           <h2>Feedback Submitted</h2>
-          <p className="subtitle" style={{ marginBottom: 16 }}>
+          <p className="subtitle">
             Thank you{reviewerInfo ? `, ${reviewerInfo.name}` : ''}! Your review has been recorded.
           </p>
           <div className="progress-msg">
