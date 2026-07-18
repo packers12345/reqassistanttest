@@ -7,6 +7,8 @@ export default function DownloadPage() {
   const [feedback, setFeedback] = useState(null)
   const [analysis, setAnalysis] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [downloading, setDownloading] = useState('')
+  const [downloadError, setDownloadError] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,13 +31,54 @@ export default function DownloadPage() {
     fetchData()
   }, [sessionId])
 
-  const downloadDocx = () => {
-    window.open(`/api/download/docx/${sessionId}`, '_blank')
+  /**
+   * Fetch the file through axios and save it from a blob.
+   *
+   * window.open() would be simpler, but a plain browser navigation carries no
+   * custom headers — so it never sends X-Access-Code and the gated API rejects
+   * it with a 401. Going through axios keeps the interceptor in play.
+   */
+  const downloadFile = async (kind, fallbackName) => {
+    setDownloading(kind)
+    setDownloadError('')
+    try {
+      const res = await axios.get(`/api/download/${kind}/${sessionId}`, {
+        responseType: 'blob',
+        timeout: 120000,
+      })
+
+      // Prefer the filename the server set, so downloads stay consistent
+      // with what the API calls them.
+      const disposition = res.headers['content-disposition'] || ''
+      const match = disposition.match(/filename="?([^";]+)"?/i)
+      const filename = match ? match[1] : fallbackName
+
+      const url = URL.createObjectURL(res.data)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      // An error body arrives as a blob too, so read it back out for the detail.
+      let detail = ''
+      if (err.response?.data instanceof Blob) {
+        try {
+          detail = JSON.parse(await err.response.data.text()).detail
+        } catch {
+          /* not JSON — fall through to the generic message */
+        }
+      }
+      setDownloadError(detail || err.message || 'Download failed.')
+    } finally {
+      setDownloading('')
+    }
   }
 
-  const downloadJson = () => {
-    window.open(`/api/download/json/${sessionId}`, '_blank')
-  }
+  const downloadDocx = () => downloadFile('docx', `incose_analysis_${sessionId}.docx`)
+  const downloadJson = () => downloadFile('json', `feedback_${sessionId}.json`)
 
   const stats = feedback?.summary_statistics
   const reqFeedback = feedback?.requirement_feedback || []
@@ -75,9 +118,15 @@ export default function DownloadPage() {
           </div>
         )}
 
+        {downloadError && <div className="error-msg">{downloadError}</div>}
+
         <div className="download-buttons-row">
-          <button className="btn-primary" onClick={downloadDocx}>Download Report (.docx)</button>
-          <button className="btn-secondary" onClick={downloadJson}>Download Feedback (.json)</button>
+          <button className="btn-primary" onClick={downloadDocx} disabled={!!downloading}>
+            {downloading === 'docx' ? 'Preparing…' : 'Download Report (.docx)'}
+          </button>
+          <button className="btn-secondary" onClick={downloadJson} disabled={!!downloading}>
+            {downloading === 'json' ? 'Preparing…' : 'Download Feedback (.json)'}
+          </button>
         </div>
       </div>
 
