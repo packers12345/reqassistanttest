@@ -39,3 +39,8 @@ Thumbs.db
 .vscode/launch.json
 .idea/
 *.ps1
+
+# Playwright artifacts
+frontend/test-results/
+frontend/playwright-report/
+frontend/e2e/fixtures/

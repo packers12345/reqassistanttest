@@ -11,6 +11,12 @@ services:
         value: "3.12"
       - key: NODE_VERSION
         value: "20"
+      # Playwright is a dev dependency used by the E2E suite. The build runs a
+      # plain `npm install` (vite itself is a dev dependency, so --omit=dev is
+      # not an option), which would otherwise pull ~150MB of browsers that the
+      # server never uses.
+      - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+        value: "1"
       # Which provider the app defaults to. Must be one the keys below cover.
       - key: AI_PROVIDER
         value: anthropic

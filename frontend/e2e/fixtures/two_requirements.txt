@@ -1,5 +1,0 @@
-[1]  (Cyber User Need)
-  MQ-99 shall be able to complete assigned missions 90% of the time under cyber attack.
-
-[1.1]  (Hardened)
-  MQ-99 shall be sufficiently hardened from cyber attack.
