@@ -350,11 +350,45 @@ def get_analysis(session_id: str):
         raise HTTPException(status_code=404, detail="Analysis not found")
 
 
+def _recover_analysis(session_id: str, feedback: dict) -> dict:
+    """Return the session's analysis, falling back to the client's copy.
+
+    All session state is in process memory (see feedback_storage), so any
+    restart loses it. A reviewer who was part-way through then loses the whole
+    review on submit. The browser still has the analysis it rendered, so the
+    frontend sends it along and we restore the session from that.
+
+    The 'analysis' key is always popped, so it never ends up stored inside the
+    feedback record itself.
+    """
+    client_analysis = feedback.pop('analysis', None)
+
+    try:
+        return load_analysis(session_id)
+    except FileNotFoundError:
+        if not client_analysis or not client_analysis.get('requirements'):
+            raise HTTPException(
+                status_code=410,
+                detail=(
+                    "This session expired because the server restarted. "
+                    "Please re-upload your requirements to start a new analysis."
+                ),
+            )
+        save_analysis(session_id, client_analysis)
+        print(f"Session {session_id} restored from the client after a restart.")
+        return client_analysis
+
+
 @app.post("/api/feedback/{session_id}")
 async def submit_feedback(session_id: str, feedback: dict):
     """Submit user feedback for all requirements (single-reviewer / legacy mode)."""
+    # Sessions live in process memory, so a restart — a deploy, or a free-tier
+    # instance waking from sleep — drops them. The reviewer's browser still
+    # holds the analysis it has been rendering, so accept that as a fallback
+    # rather than discarding a completed review.
+    analysis = _recover_analysis(session_id, feedback)
+
     try:
-        analysis = load_analysis(session_id)
         save_feedback(session_id, feedback)
         docx_bytes = generate_feedback_document(session_id, analysis, feedback)
         save_docx(session_id, docx_bytes)
@@ -499,10 +533,8 @@ async def submit_reviewer_feedback(session_id: str, reviewer_id: str, feedback: 
     if not reviewer:
         raise HTTPException(status_code=404, detail=f"Reviewer {reviewer_id} not found")
 
-    try:
-        load_analysis(session_id)
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Analysis not found")
+    # Same restart-recovery as the solo path — see _recover_analysis.
+    _recover_analysis(session_id, feedback)
 
     try:
         save_reviewer_feedback(session_id, reviewer_id, feedback)

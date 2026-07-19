@@ -155,12 +155,17 @@ export default function ReviewPage() {
         }
       })
 
+      // Session state lives in the server's memory, so a restart between
+      // loading this page and submitting would otherwise throw the review
+      // away. Send the analysis we already hold so the server can restore it.
+      const payload = { requirement_feedback, analysis }
+
       if (reviewerId) {
-        await axios.post(`/api/feedback/${sessionId}/${reviewerId}`, { requirement_feedback })
+        await axios.post(`/api/feedback/${sessionId}/${reviewerId}`, payload)
         setSubmitted(true)
         setSubmitting(false)
       } else {
-        await axios.post(`/api/feedback/${sessionId}`, { requirement_feedback })
+        await axios.post(`/api/feedback/${sessionId}`, payload)
         navigate(`/download/${sessionId}`)
       }
     } catch (err) {
