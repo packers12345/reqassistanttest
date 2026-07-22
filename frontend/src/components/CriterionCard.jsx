@@ -152,7 +152,14 @@ export default function CriterionCard({ evaluation, originalText, feedback, onFe
               type="text"
               className="text-input disclosure-field"
               value={feedback.user_text || ''}
-              onChange={(e) => onFeedbackChange({ ...feedback, user_text: e.target.value, user_action: 'modify' })}
+              onChange={(e) => onFeedbackChange({
+                ...feedback,
+                criterion_id,
+                user_text: e.target.value,
+                // 'suggest', not 'modify': this criterion was not flagged, so
+                // it is not an accept/reject/modify decision on a violation.
+                user_action: 'suggest',
+              })}
               placeholder="Describe your suggested modification..."
               aria-label="Suggested modification"
             />

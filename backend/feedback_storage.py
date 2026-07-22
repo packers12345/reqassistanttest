@@ -64,6 +64,9 @@ def calculate_statistics(feedback: Dict) -> Dict:
     stats = {
         'total_requirements': len(feedback.get('requirement_feedback', [])),
         'total_violations': 0,
+        # Reviewer suggestions on criteria the AI marked satisfied. Counted
+        # separately so they never distort the violation acceptance rates.
+        'total_suggestions': 0,
         'actions': {
             'accept': 0,
             'reject': 0,
@@ -75,6 +78,8 @@ def calculate_statistics(feedback: Dict) -> Dict:
     rule_stats = {}
 
     for req_feedback in feedback.get('requirement_feedback', []):
+        stats['total_suggestions'] += len(req_feedback.get('suggestion_feedback', []))
+
         for viol_feedback in req_feedback.get('violation_feedback', []):
             stats['total_violations'] += 1
 

@@ -73,55 +73,54 @@ def generate_feedback_document(
         violations_found = len(req_feedback.get('violation_feedback', []))
         doc.add_heading(f'VIOLATIONS FOUND: {violations_found}', 3)
 
+        # The analysis stores per-criterion results under 'criteria_evaluations'
+        # keyed by criterion_id; feedback carries that id as 'rule_id'.
+        evaluations = {
+            ev.get('criterion_id'): ev
+            for ev in req_analysis.get('criteria_evaluations', [])
+        }
+
         for viol_feedback in req_feedback.get('violation_feedback', []):
-            violation_id = viol_feedback.get('violation_id', '')
-
-            # Find corresponding violation from analysis
-            violation = next(
-                (v for v in req_analysis.get('violations', [])
-                 if v.get('violation_id') == violation_id),
-                None
-            )
-
-            if not violation:
-                continue
+            rule_id = viol_feedback.get('rule_id', '')
+            violation = evaluations.get(rule_id, {})
 
             # Rule header
             doc.add_heading(
-                f"Violation: {violation['rule_id']} - {violation['rule_name']}",
+                f"Violation: {rule_id} - "
+                f"{viol_feedback.get('criterion_name') or violation.get('criterion_name', '')}",
                 4
             )
 
             # Violation details table
-            table = doc.add_table(rows=6, cols=2)
+            table = doc.add_table(rows=5, cols=2)
             table.style = 'Light Grid Accent 1'
 
-            # Category
-            table.rows[0].cells[0].text = 'Category:'
-            table.rows[0].cells[1].text = violation.get('rule_category', '')
-
             # Explanation
-            table.rows[1].cells[0].text = 'Problem:'
-            table.rows[1].cells[1].text = violation.get('explanation', '')
+            table.rows[0].cells[0].text = 'Problem:'
+            table.rows[0].cells[1].text = violation.get('explanation', '')
 
             # Affected text
-            table.rows[2].cells[0].text = 'Affected Text:'
-            cell = table.rows[2].cells[1]
-            cell.text = violation.get('affected_text', '')
+            table.rows[1].cells[0].text = 'Affected Text:'
+            cell = table.rows[1].cells[1]
+            cell.text = violation.get('affected_text') or ''
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
                     run.font.color.rgb = RGBColor(255, 0, 0)
 
             # AI suggestion
-            table.rows[3].cells[0].text = 'AI Suggestion:'
-            cell = table.rows[3].cells[1]
-            cell.text = violation.get('suggested_replacement', '')
+            table.rows[2].cells[0].text = 'AI Suggestion:'
+            cell = table.rows[2].cells[1]
+            cell.text = (
+                viol_feedback.get('ai_suggestion')
+                or violation.get('suggested_replacement')
+                or ''
+            )
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
                     run.font.color.rgb = RGBColor(0, 128, 0)
 
             # User decision
-            table.rows[4].cells[0].text = 'User Decision:'
+            table.rows[3].cells[0].text = 'User Decision:'
             action = viol_feedback.get('user_action', '').upper()
 
             if action == 'ACCEPT':
@@ -131,7 +130,7 @@ def generate_feedback_document(
             else:
                 color = RGBColor(255, 165, 0)
 
-            cell = table.rows[4].cells[1]
+            cell = table.rows[3].cells[1]
             cell.text = action
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
@@ -139,8 +138,8 @@ def generate_feedback_document(
                     run.font.bold = True
 
             # Final text for this violation
-            table.rows[5].cells[0].text = 'Final Text:'
-            cell = table.rows[5].cells[1]
+            table.rows[4].cells[0].text = 'Final Text:'
+            cell = table.rows[4].cells[1]
             cell.text = viol_feedback.get('user_text', '')
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
@@ -153,6 +152,22 @@ def generate_feedback_document(
                     style='Intense Quote'
                 )
 
+            doc.add_paragraph()
+
+        # Reviewer suggestions on criteria the AI marked satisfied
+        suggestions = req_feedback.get('suggestion_feedback', [])
+        if suggestions:
+            doc.add_heading(f'REVIEWER SUGGESTIONS: {len(suggestions)}', 3)
+            for sug in suggestions:
+                doc.add_heading(
+                    f"Suggestion: {sug.get('rule_id', '')} - {sug.get('criterion_name', '')}",
+                    4
+                )
+                p = doc.add_paragraph()
+                run = p.add_run(sug.get('user_text', ''))
+                run.font.bold = True
+                if sug.get('notes'):
+                    doc.add_paragraph(f"Notes: {sug['notes']}", style='Intense Quote')
             doc.add_paragraph()
 
         # Final requirement text

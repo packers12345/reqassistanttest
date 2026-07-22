@@ -97,7 +97,10 @@ export default function RequirementCard({ requirement, feedbackState, onFeedback
             const feedback = feedbackState[key] || {
               criterion_id: ev.criterion_id,
               user_action: '',
-              user_text: ev.suggested_replacement || '',
+              // Satisfied criteria start blank: the box asks the reviewer to
+              // describe a change, so prefilling it with AI text would get
+              // submitted back as if the reviewer had written it.
+              user_text: ev.satisfied ? '' : (ev.suggested_replacement || ''),
               notes: '',
             }
             return (

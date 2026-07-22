@@ -146,10 +146,31 @@ export default function ReviewPage() {
             }
           })
 
+        // Suggestions the reviewer volunteered on criteria the AI marked
+        // satisfied ("Suggest a change anyway"). Kept in their own array rather
+        // than folded into violation_feedback: that array is index-aligned
+        // across reviewers by the consensus engine, and it feeds the violation
+        // counts in summary_statistics. These are also free-text suggestions
+        // against a criterion with no affected_text, so they are deliberately
+        // not applied to final_text.
+        const suggestion_feedback = evals
+          .filter((ev) => ev.satisfied)
+          .map((ev) => ({ ev, fb: feedbackState[`${req.req_id}-${ev.criterion_id}`] }))
+          .filter(({ fb }) => (fb?.user_text || '').trim() || (fb?.notes || '').trim())
+          .map(({ ev, fb }) => ({
+            suggestion_id: `${req.req_id}-${ev.criterion_id}`,
+            rule_id: ev.criterion_id,
+            criterion_name: ev.criterion_name,
+            user_action: 'suggest',
+            user_text: (fb.user_text || '').trim(),
+            notes: (fb.notes || '').trim(),
+          }))
+
         return {
           req_id: req.req_id,
           original_text: req.original_text,
           violation_feedback,
+          suggestion_feedback,
           final_text: buildFinalText(req),
           overall_notes: '',
         }
